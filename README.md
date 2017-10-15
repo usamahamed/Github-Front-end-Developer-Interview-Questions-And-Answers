@@ -52,7 +52,7 @@ var spiralTraversal = function(matriks){
     goAround(matriks);  
 };
 ```
-=============================================================================================================================
+=====================================================================================
 // Sort array with semver-rules
 var arr = [ "1.0.5", "2.5.0", "0.12.0", "1", "1.23.45", "1.4.50", "1.2.3.4.5.6.7"];
 
@@ -78,7 +78,7 @@ function cmpVersions (a, b) {
     return segmentsA.length - segmentsB.length;
 }
 ```
-=============================================================================================================================
+=====================================================================================
  Implement deepClone ( withour recursive links and functions
  simpliest , suppose is JSON.parse(JSON.stringify(m)) but we need real code =)
  ```
@@ -92,7 +92,7 @@ function cmpVersions (a, b) {
   return bObject;
 }
  ```
- ============================================================================================================================
+ =====================================================================================
   Implement bind(func, context). Make polyfill .bind(context)
 ```
 var slice = Array.prototype.slice;
@@ -105,7 +105,7 @@ function bind (fn, context /*, ...args */) {
   };
 };
 ```
- ============================================================================================================================
+ =====================================================================================
 
 // We have next stub
 // Fill blank methods to describe algorithms for servicing multistory building with your elevator
@@ -212,7 +212,7 @@ Elevator.prototype = {
     }
 }
 ```
- ============================================================================================================================
+ =====================================================================================
 //We want to write calculations using functions and get the results. Let's have a look at some examples:
 // seven(times(five())); // must return 35
 // four(plus(nine())); // must return 13
@@ -257,5 +257,203 @@ function dividedBy(num) {
     };
 }
 ```
- ============================================================================================================================
+ =====================================================================================
 // implement simple module system with injection system like in angular
+```
+var service = function() {
+    return { name: 'Service' };
+}
+var router = function() {
+    return { name: 'Router' };
+}
+var doSomething = function(service, router, other) {
+    var s = service();
+    var r = router();
+};
+```
+=====================================================================================
+// Output?
+var f = (function f(){ return "1"; }, function g(){ return 2; })();
+typeof f;
+```
+number
+```
+=====================================================================================
+// Game where everyone win. Output?
+<button id="btn-0">Button 1!</button>
+<button id="btn-1">Button 2!</button>
+<button id="btn-2">Button 3!</button>
+<script type="text/javascript">
+    var prizes = ['A Unicorn!', 'A Hug!', 'Fresh Laundry!'];
+    for (var btnNum = 0; btnNum < prizes.length; btnNum++) {
+        // for each of our buttons, when the user clicks it...
+        document.getElementById('btn-' + btnNum).onclick = function() {
+            // tell her what she's won!
+            alert(prizes[btnNum]);
+        };
+    }
+</script>
+     ```
+     undefine
+     use let or wrap in function scope
+     ```
+   =====================================================================================
+      Create compose function
+ const compose = (f1, f2) => value => f1( f2(value) )
+ list of functions can has any length
+ for zero-length list it should return `() => undefined`
+ compose(fn, fn1, fn2, fn3) ... etc
+     ```
+     const compose = (...fns) =>
+  fns.reverse().reduce((prevFn, nextFn) =>
+    value => nextFn(prevFn(value)),
+    value => value
+  );
+const compose2 = (f, g) => (...args) => f(g(...args))
+const compose = (...fns) => fns.reduce(compose2);
+const pipe = (...fns) => fns.reduceRight(compose2);
+     ```
+ Implement `.map`  using `.reduce` for iteration ( for arrays )
+ ```
+ module.exports = function arrayMap(arr, fn) {
+    'use strict';
+    return arr.reduce(function (prev, current) {
+        return prev.concat(fn(current));
+    }, []);
+};
+ ```
+ =====================================================================================
+     
+ / Suppose findData is a function that takes a query object and returns a promise for the result of the query. 
+// Suppose also that someRandomArrayOfQueries is an array of query objects. 
+// Explain what would be printed by the following code and why
+function runMultipleQueries(queries) {
+ var results = [];
+ queries.forEach(doQuery);
+ return results;
+
+ function doQuery(query) {
+   findData(query)
+   .then(results.push.bind(results));
+ } 
+}
+function log(value) {
+ console.log(value);
+}
+runMultipleQueries(someRandomArrayOfQueries).forEach(log);
+
+- doQuery is executed at some point in the future. The array however is returned and logged immediately. Therefore the array is still empty and nothing is being logged. To fix this runMultipleQueries needs to return a promise as well. That could e.g. look like this.
+```
+function runMultipleQueries(queries) {
+ return new Promise(function(resolve, reject) {
+   var results = [];
+   queries.forEach(doQuery);
+
+   function doQuery(query) {
+     findData(query)
+     .then(function(result) {
+         results.push(result);
+         if(results.length === queries.length) resolve(results);
+     }, reject);
+   }
+ });
+}
+```
+ =====================================================================================
+describe('Step 5', function() {
+  it('add(2,8)(5).value() => 15', function() {
+    add(2,8)(5).value()
+      .should.be.exactly(15).and.be.a.Number;
+  });
+  it('add(3, 3, 5)(4)(3, 2).value() => 20', function() {
+    add(3, 3, 5)(4)(3, 2).value()
+      .should.be.exactly(20).and.be.a.Number;
+  });
+});
+```
+
+```
+
+ =====================================================================================
+Given two identical DOM trees (not the same one), and a node from one of them find the node in the other one.
+```
+function indexOf(arrLike, target) {
+    return Array.prototype.indexOf.call(arrLike, target);
+}
+
+// Given a node and a tree, extract the nodes path 
+function getPath(root, target) {
+    var current = target;
+    var path = [];
+    while(current !== root) {
+        path.unshift(indexOf(current.parentNode.childNodes, current));
+        current = current.parentNode;
+    }
+    return path;
+}
+
+// Given a tree and a path, let's locate a node
+function locateNodeFromPath(root, path) {
+    var current = root;
+    for(var i = 0, len = path.length; i < len; i++) {
+        current = current.childNodes[path[i]];
+    }
+    return current;
+}
+
+function getDoppleganger(rootA, rootB, target) {
+    return locateNodeFromPath(rootB, getPath(rootA, target));
+}
+```
+=====================================================================================
+// What is the difference between these four promises?
+doSomething().then(function () {
+  return doSomethingElse();
+});
+
+doSomething().then(function () {
+  doSomethingElse();
+});
+
+doSomething().then(doSomethingElse());
+
+doSomething().then(doSomethingElse);
+```
+1 and 4 are the sync and what it's recommended to be used most of the time
+2 and 3 are the async and are not that common/useful. Some would even consider it an error
+https://github.com/Exictos-DCS/watch-your-language/blob/master/callbacks-and-promises.md
+```
+=====================================================================================
+
+<div id="selectio">Select me!</div>
+// create js code ( via native js ) which on click at div will select all text inside
+// note - just check range/selection api
+```
+<script type="text/javascript">
+    function selectText(containerid) {
+        if (document.selection) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(document.getElementById(containerid));
+            range.select();
+        } else if (window.getSelection) {
+            var range = document.createRange();
+            range.selectNode(document.getElementById(containerid));
+            window.getSelection().addRange(range);
+        }
+    }
+</script>
+
+```
+=====================================================================================
+Given an array of numbers, you should find the number which occurs an odd number of times within the array. 
+```
+function findOddAmount(numbers) {
+	return numbers.reduce((p, n) => p ^ n);
+}
+```
+=====================================================================================
+what do you like in lodash/underscore?
+
+
+=====================================================================================
+
