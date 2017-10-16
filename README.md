@@ -295,23 +295,26 @@ number
      undefine
      use let or wrap in function scope
      ```
-   =====================================================================================
-      Create compose function
+=====================================================================================
+Create compose function
  const compose = (f1, f2) => value => f1( f2(value) )
  list of functions can has any length
- for zero-length list it should return `() => undefined`
- compose(fn, fn1, fn2, fn3) ... etc
-     ```
-     const compose = (...fns) =>
-  fns.reverse().reduce((prevFn, nextFn) =>
+ for zero-length list it should return () => undefined
+ compose(fn, fn1, fn2, fn3) 
+     
+    ``` 
+    const compose = (...fns) =>
+ fns.reverse().reduce((prevFn, nextFn) =>
     value => nextFn(prevFn(value)),
     value => value
   );
 const compose2 = (f, g) => (...args) => f(g(...args))
 const compose = (...fns) => fns.reduce(compose2);
-const pipe = (...fns) => fns.reduceRight(compose2);
-     ```
- Implement `.map`  using `.reduce` for iteration ( for arrays )
+const pipe = (...fns) => fns.reduceRight(compose2);```
+     
+ =====================================================================================
+	    
+ Implement .map  using .reduce for iteration ( for arrays )
  ```
  module.exports = function arrayMap(arr, fn) {
     'use strict';
