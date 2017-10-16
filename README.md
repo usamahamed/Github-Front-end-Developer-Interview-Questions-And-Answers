@@ -304,8 +304,8 @@ Create compose function
      
     ``` 
     const compose = (...fns) =>fns.reverse().reduce((prevFn, nextFn) =>value => nextFn(prevFn(value)),value => value);
-```const compose2 = (f, g) => (...args) => f(g(...args))
-```const compose = (...fns) => fns.reduce(compose2);
+```const compose2 = (f, g) => (...args) => f(g(...args))```
+```const compose = (...fns) => fns.reduce(compose2);```
 ```const pipe = (...fns) => fns.reduceRight(compose2);```
      
  =====================================================================================
