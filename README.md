@@ -832,6 +832,211 @@ Task queue: setInterval, setTimeout 1
 
 Cycle 2:
 
-the microtask queue is empty, `setInteval`'s handler can be run, another `setInterval` is scheduled as a task, right behind `setTimeout 1`
+the microtask queue is empty, `setInteval`'s handler can be run, another `setInterval` is scheduled as a task, right behind setTimeout 1
 
 =====================================================================================
+// What is the output?
+```
+var a = 1;
+function b() {
+  a = 10;
+  return;
+  function a() {
+  }
+}
+b();
+console.log(a);
+```
+because of hoisting of function decleration
+https://stackoverflow.com/questions/28060101/how-the-below-javascript-scope-works
+=====================================================================================
+// What is the output?
+```
+var a = {};
+var b = { key: 'b' };
+var c = { key: 'c' };
+
+a[b] = 123;
+a[c] = 456;
+```
+456 because b or c converted to string not object
+https://stackoverflow.com/questions/29285901/why-ac-override-ab
+
+ What is the output?
+```
+console.log("1" + 2); //12
+console.log(2 + "1");  //21
+console.log(1 + 2 + 3 + 4 + "5");  //105
+```
+// What is the output?
+```
+(function {
+  alert(inner);  //undefine
+  inner();       // type error inner is not function
+  var inner = function() {
+    alert('inner');
+  }
+})();
+```
+
+// What is the output?
+```
+(function() {
+  f();
+  f = function() {
+    console.log(1);
+  }
+})();
+
+function f() {
+  console.log(2)
+}
+f();
+```
+print 2 and after that print 1
+
+// number / undefined / function / Error ?
+```var f = function g(){ return 23; };
+typeof g();  //ReferenceError: g is not defined
+ ```
+ // what is x ?
+```var y = 1, x = y = typeof x;
+x; // number
+```
+
+// Output?
+```var x = [typeof x, typeof y][1];
+typeof typeof x;
+```
+typeof typeof x is "string". The quickest logic to this is to observe that typeof x always yields a string, no matter what x is. typeof typeof x thus always results in the string "string". As a side note, [typeof x, typeof y][1] can be simplified to typeof y after evaluation.
+
+// Output?  Just be attentive
+```(function(foo){
+  return typeof foo.bar;
+})({ foo: { bar: 1 } });
+```
+The above expression results in the string "undefined". The confusion factor is easier to eliminate by rewriting multiple times. First, we pull out the anonymous function's only argument:
+
+```var baz = { foo: { bar: 1 } }; 
+(function(foo){ 
+  return typeof foo.bar; 
+})(baz); 
+```
+Next, we eliminate the function by inlining it:
+```
+var baz = { foo: { bar: 1 } }; 
+var foo = baz; 
+typeof foo.bar; 
+```
+Finally, by substitution we remove the intermediate variable foo as well:
+```
+var baz = { foo: { bar: 1 } }; 
+typeof baz.bar; 
+```
+At this point it becomes clear that the property bar is not defined for baz; it is defined for baz.foo. typeof baz.bar therefore yields "undefined".
+
+// Output
+```
+(function() {
+    logMe();
+    var logMe = function() {
+        console.log('Jesus, George, it was a wonder I was even born.');
+    };
+    logMe();
+
+    function logMe() {
+        console.log('Great Scott!');
+    }
+    logMe();
+})();
+```
+print Great Scott!  Jesus, George, it was a wonder I was even born. Jesus, George, it was a wonder I was even born.
+
+// result?
+```new String('Hello') === 'Hello'  // false
+```
+Two String objects will always be unequal to each other. Note that JavaScript has string primitive values as well as a String constructor to create wrapper objects. All object equality comparisons (especially with ===) are carried out as a test for reference equality. References to two different objects will of course never be equal to each other.
+
+So "hello" === "hello" will be true because those are string primitives.
+
+// result?
+```"This is a string" instanceof String; false
+```
+// output ?
+```var a = 1;
+var b = function() {
+ a = 10;
+ return a;
+ function a() {
+   a = 5;
+  }
+};
+console.log(b(), a);  //print 10 1
+```
+// result?
+```function f(){ return f; }
+new f() instanceof f;
+```
+new f() instanceof f yields false. To understand why, it must first be known what new f() yields. The new operator creates a new object and calls the constructor function with this new object as its current context object. In other words, within the constructor, this points to the new object that is currently being created. After calling the constructor, the default semantics of the new operator is to yield said new object, even if the constructor returns some value.
+
+// output?
+```var text = 'outside';
+function logIt(){
+    console.log(text);
+    var text = 'inside';
+};
+logIt();
+```
+In JavaScript, variables are "hoisted" to the top of the function. That is, unlike some other languages (such as C), a variable declared within a function is within scope throughout the function. So the compiler sees your function like this:
+```
+function logIt(){
+    var text;
+    console.log(text);
+    text = 'inside';
+} // <-- no semicolon after a function declaration
+```
+// output? ( nb: answer depends on environment / browser )
+```
+(function() {
+ var a = 'initial';
+  if(a) {
+    function f() { console.log("1"); };
+  } else {
+    function f() { console.log("2"); };
+  }
+  f();
+})();  // log 1
+```
+// output?
+```(function() {
+ var a = 0;
+  f();
+  if( a ) {
+    function f() { console.log("1"); };
+  } else {
+    function f() { console.log("2"); };
+  }
+})();		//Uncaught TypeError: f is not a function
+
+```
+// What does the following code do? And why? ( quirks )
+```falseStr = "false";
+if(true){
+  var falseStr;
+  if(falseStr){
+   console.log("false" == true);
+   console.log("false" == false);
+  }
+}
+```
+http://www.technofattie.com/2014/09/03/the-best-javascript-interview-question.html
+
+how to check if something is object?
+// NB: asker should keep in mind:
+// 1) typeof null => 'object'
+// 2) Object.create(null) instanseof Object => false
+// 3) typeof function() {} => 'function' , but it's still object
+
+https://stackoverflow.com/questions/8511281/check-if-a-value-is-an-object-in-javascript
+
+
