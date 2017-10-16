@@ -426,8 +426,8 @@ https://github.com/Exictos-DCS/watch-your-language/blob/master/callbacks-and-pro
 =====================================================================================
 
 <div id="selectio">Select me!</div>
-// create js code ( via native js ) which on click at div will select all text inside
-// note - just check range/selection api
+ create js code ( via native js ) which on click at div will select all text inside
+ note - just check range/selection api
 ```
 <script type="text/javascript">
     function selectText(containerid) {
