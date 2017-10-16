@@ -303,14 +303,10 @@ Create compose function
  compose(fn, fn1, fn2, fn3) 
      
     ``` 
-    const compose = (...fns) =>
- fns.reverse().reduce((prevFn, nextFn) =>
-    value => nextFn(prevFn(value)),
-    value => value
-  );
-const compose2 = (f, g) => (...args) => f(g(...args))
-const compose = (...fns) => fns.reduce(compose2);
-const pipe = (...fns) => fns.reduceRight(compose2);```
+    const compose = (...fns) =>fns.reverse().reduce((prevFn, nextFn) =>value => nextFn(prevFn(value)),value => value);
+```const compose2 = (f, g) => (...args) => f(g(...args))
+```const compose = (...fns) => fns.reduce(compose2);
+```const pipe = (...fns) => fns.reduceRight(compose2);```
      
  =====================================================================================
 	    
