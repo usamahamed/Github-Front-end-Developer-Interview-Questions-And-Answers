@@ -418,8 +418,324 @@ doSomething().then(doSomethingElse);
 ```
 1 and 4 are the sync and what it's recommended to be used most of the time
 2 and 3 are the async and are not that common/useful. Some would even consider it an error
-https://github.com/Exictos-DCS/watch-your-language/blob/master/callbacks-and-promises.md
+// 1
+doSomething().then(function () {
+    return doSomethingElse();
+}).then(finalHandler);
+
+/*
+doSomething
+|-------------------|
+                    doSomethingElse(undefined)
+                    |-------------------|
+                                        finalHandler(resultOfDoSomethingElse)
+                                        |-------------------|
+*/
+
+// 2
+doSomething().then(function () {
+    doSomethingElse();
+}).then(finalHandler);
+
+/*
+doSomething
+|-------------------|
+                    doSomethingElse(undefined)
+                    |-------------------|
+                    finalHandler(undefined)
+                    |-------------------|
+*/
+
+// 3
+doSomething().then(doSomethingElse())
+.then(finalHandler);
+
+/*
+doSomething
+|-------------------|
+doSomethingElse(undefined)
+|-------------------------------------|
+                    finalHandler(resultOfDoSomething)
+                    |-------------------|
+*/
+                        
+// 4
+doSomething().then(doSomethingElse)
+.then(finalHandler);
+
+/*
+doSomething
+|-------------------|
+                    doSomethingElse(resultOfDoSomething)
+                    |-------------------|
+                                        finalHandler(resultOfDoSomethingElse)
+                                        |-------------------|
+*/                                          
 ```
+=====================================================================================
+```
+Promise.resolve('foo').then(Promise.resolve('bar')).then(function (result) {
+  console.log(result);  // This prints out 'foo'!
+});
+```
+ The reason this happens is because when you pass then() a non-function (such as a promise), it actually interprets
+ it is then(null), which causes the previous promise's result to fall through. You can test this yourself:
+```
+Promise.resolve('foo').then(null).then(function (result) {
+  console.log(result);
+});
+```
+ This actually circles back to the previous point about promises vs promise factories. In short, you CAN pass a promise
+ directly into a then() method, but it won't do what you think it's doing. then() is supposed to take a function,
+ so most likely you meant to do:
+```
+Promise.resolve('foo').then(function () {
+    return Promise.resolve('bar');
+}).then(function (result) {
+    console.log(result);    // This will print out 'bar' as expected.
+});
+```
+// So just remind yourself: always pass a function into then()!
+
+/*
+ * Advanced mistake #2: catch() isn't exactly like then(null, ...)
+*/
+```
+// These two snippets are equivalent:
+somePromise.catch(function (err) {
+   // handle error 
+});
+
+somePromise().then(null, function (err) {
+   // handle error 
+});
+```
+// However, that doesn't mean that the following two snippets are equivalent:
+```
+somePromise().then(function () {
+    return someOtherPromise();
+}).catch(function (err) {
+    // handle error
+});
+
+somePromise().then(function () {
+    return someOtherPromise();
+}, function (err) {
+   // handle error 
+});
+```
+// As it turns out, when you use the then(resolveHandler, rejectHandler) format, the rejectHandler 
+// WON'T ACTUALLY CATCH AN ERROR IF IT'S THROWN BY THE resolveHandler ITSELF.
+// For this reason, make it a habit to NEVER use the second argument to then(), and to ALWAYS PREFER catch().
+// The exception is when writing asynch (Mocha, for instance) tests, where you might write a test to ensure that an error is thrown.
+
+/*
+ * Advanced mistake #3: promises vs promise factories
+*/
+// Let's say you want to execute a series of promises one after the other, in a sequence.
+// That is, your want something like Promise.all(), but which doesn't execute promises in parallel.
+// You might naively write something like this:
+```
+function executeSequentially(promises) {
+    var result = Promise.resolve();
+    promises.forEach(function (promise) {
+        result = result.then(promise);
+    });
+    return result;
+}
+```
+// Unfortunately, this will not work the way you intended. The promises you pass in to executeSequentially() will STILL 
+// execute in parallel. The reason this happens is that you don't want to operate over an array of promises at all.
+// Per the promise spec, as soon as a promise is created, it begins executing. So what you really want is an array of PROMISE FACTORIES:
+```
+function executeSequentially(promiseFactories) {
+    var result = Promise.resolve();
+    promiseFactories.forEach(function (promiseFactory) {
+        result = result.then(promiseFactory);
+    });
+    return result;
+}
+```
+// Why does this work?? It works because a promise factory doesn't create the promise until it's asked to. It works the same way
+// as a then function - in fact, it's the same thing!
+// If you look at the executeSequentially() function above, and then image myPromiseFactory being substituted inside of result.then(...),
+// then hopefully a light bulb will click in your brain and you will have achieved promise enlightenment!
+```
+function myPromiseFactory() {
+    return somethingThatCreatesAPromise();
+}
+```
+/*
+ * Advanced mistake #4: What if I want the result of two promises?
+*/
+// Often times, one promise will depend on another, but we'll want the output of both promises. For instance:
+```
+getUserByName('emily').then(function (user) {
+    return getUserAccountById(user.id);
+}).then(function (userAccount) {
+    // dangit, I need the 'user' object too!!
+});
+```
+// Wanting to be good JS devs and avoid the pyramid of doom, we might just store the 'user' object in a higher-scoped variable:
+```
+var user;
+getUserByName('emily').then(function (result) {
+    user = result;
+    return getUserAccountById(user.id);
+}).then(function (userAccount) {
+    // okay, I have both the 'user' and the 'userAccount'
+});
+```
+// This works, but it is a bit klunky. Recommended strategy: just let go of your preconceptions and embrace the pyramid:
+```
+getUserByName('emily').then(function (user) {
+    return getUserAccountById(user.id).then(function (userAccount) {
+    // okay, I have both the 'user' and the 'userAccount'
+    });
+});
+```
+// ...at least temporarily. If the indentation ever becomes an issue, just do what JS devs have done since the beginning - 
+// extract the function into a named function:
+```
+function onGetUserAndUserAccount(user, userAccount) {
+    return doSomething(user, userAccount);
+}
+
+function onGetUser(user) {
+    return getUserAccountById(user.id).then(function (userAccount) {
+        return onGetUserAndUserAccount(user, userAccount);
+    });
+}
+
+getUserByName('emily')
+    .then(onGetUser)
+    .then(function () {
+    // At this point, doSomething() is done and we are back to indentation 0
+});
+```
+/* 
+ * Rookie Mistake #3: Forgetting to add .catch()
+*/
+```
+somePromise().then(function (){
+    return anotherPromise();
+}).then(function () {
+    return yetAnotherPromise();
+}).catch(console.log.bind(console)); // <-- this is badass
+```
+/* 
+ * Rookie Mistake #4: Using side effects instead of returning
+*/
+```
+somePromise().then(function (){
+    someOtherPromise();
+}).then(function (){
+    // Gee, I hope someOtherPromise() has resolved!
+    // Spoiler alert: It hasn't.
+});
+```
+
+/* 
+ * The ONE WEIRD TRICK that, once you understand it, will prevent all of the errors discussed so far.
+ * The magic of promises is that they give us back our precious return and throw. But what does this 
+ * look like in practice?
+ * Every promise gives you a then() method (or catch(), which is just sugar for then(null, ...)).
+ * Here we are inside a then() function:
+*/
+```
+somePromise().then(function () {
+   // I'm inside a then() function! 
+});
+```
+/*
+ * What can we do here? There are three things:
+    1. return another promise
+    2. return a synchronous value (or undefined)
+    3. throw a synchronous error
+*/
+
+/*
+ * 1. Return another promise
+*/
+// A common pattern, aka 'composing promises'
+```
+getUserByName('emily').then(function (user) {
+    return getUserAccountById(user.id);     // Notice the return here. If we didn't say return, then the getUserAccountById() would actually be a side effect, and the next function would receive undefined instead of the userAccount.
+}).then(function (userAccount) {
+    // I got a user account!
+});
+```
+/*
+ * 2. Return a synchronous value (or undefined)
+*/
+// Returning undefined is often a mistake, but returning a synchronous value is actually an awesome way to 
+// convert synchronous code into promisey code. For instance, let's say we have an in-memory cache of users. We can do:
+```
+getUserByName('emily').then(function (user) {
+    if (inMemoryCache[user.id]) {
+        return inMemoryCache[user.id];      // returning a synchronous value!
+    }
+    return getUserAccountById(user.id);     // returning a promise!
+}).then(function (userAccount) {
+    // I got a user account!
+});
+```
+// The second function doesn't care whether the userAccount was fetchedd synchronously or asynchronously, 
+// and the first function is free to return either a synchronous or asynchronous value.
+// Unfortunately, there's the inconvenient fact that non-returning functions in javascript technically return undefined,
+// which means it's easy to accidentally introduce side effects when you meant to return something.
+// For this reason, you should make it a personal habit to ALWAYS RETURN OR THROW from inside a then() function.
+
+/*
+ * 3. Throw a synchronous error.
+*/
+// Let's say we want to throw a synchronous error in case the user is logged out. It's quite easy:
+```
+getUserByName('emily').then(function (user) {
+    if (user.isLoggedOut()) {
+        throw new Error('user logged out!');    // throwing a synchronous error!
+    }
+    if (inMemoryCache[user.id]) {
+        return inMemoryCache[user.id];      // returning a synchronous value!
+    }
+    return getUserAccountById(user.id);     // returning a promise!
+}).then(function (userAccount) {
+    // I got a user account!
+}).catch(function (err) {
+    // Boo, I got an error!
+});
+```
+// Our catch() will receive a synch error if the user is logged out, and it will receive an asynch error if ANY OF THE PROMISES ARE REJECTED.
+// Again, the function doesn't care whether the error it gets is synch or asynch.
+// This is especially useful bc it can help identify coding errors during dev. For instance, if at any point inside of a then() function we do
+// a JSON.parse(), it might throw a synch error if the JSON is invalid. With callbacks, that error would get swallowed, but with promises,
+// we can simply handle it inside our catch() function.
+
+
+/*
+ * Advanced mistake #1: Not knowing about Promise.resolve().
+*/
+// Promises are very useful for wrapping synch code as async code. However, if you find yourself typing this a lot:
+```
+new Promise(function (resolve, reject) {
+    resolve(someSynchValue);
+}).then(/* ... */);
+// You can express this more succinctly using Promise.resolve():
+Promise.resolve(someSynchValue).then(/* ... */);
+```
+// Just remember: any code that might throw synchronously is a good candidate for a nearly-impossible-to-debug swalled error somewhere down the line.
+// But if you wrap everything in Promise.resolve(), then you can always be sure to catch() it later.
+// A good habit to get into is to begin all of your promise-returning API methods like this:
+```
+function somePromiseAPI() {
+    return Promise.resolve().then(function () {
+        doSomethingThatMayThrow();
+        return 'foo';
+    }).then(/* ... */);
+}
+```
+// Promise.reject() will return a promise that is immediately rejected.
+Promise.reject(new Error(console.log('some awful error')));
 =====================================================================================
 
 <div id="selectio">Select me!</div>
@@ -453,4 +769,69 @@ what do you like in lodash/underscore?
 
 
 =====================================================================================
+what is the output?
+```
+function say(a) {
+  alert(a);
+}
+say(1);
+setTimeout(say(2), 5000);
+setTimeout(function() {
+  say(3);
+}, 1000);
+setTimeout(say, 2000, 4);
+```
+1 2 3 4
+=====================================================================================
 
+// The following recursive code will cause a stack overflow if the array list is too large.
+// How can you fix this and still retain the recursive pattern?
+```
+var list = readHugeList();
+var nextListItem = function() {
+  var item = list.pop();
+  if (item) {
+    // process the list item...
+    nextListItem();
+  }
+};
+```
+The potential stack overflow can be avoided by modifying the nextListItem function as follows:
+```
+var list = readHugeList();
+
+var nextListItem = function() {
+    var item = list.pop();
+
+    if (item) {
+        // process the list item...
+        setTimeout( nextListItem, 0);
+    }
+};
+```
+The stack overflow is eliminated because the event loop handles the recursion, not the call stack. When nextListItem runs, if item is not null, the timeout function (nextListItem) is pushed to the event queue and the function exits, thereby leaving the call stack clear. When the event queue runs its timed-out event, the next item is processed and a timer is set to again invoke nextListItem. Accordingly, the method is processed from start to finish without a direct recursive call, so the call stack remains clear, regardless of the number of iterations
+=====================================================================================
+// What is the output
+```
+(function() {
+  console.log(1);
+  setTimeout(() => console.log(2), 1000);
+  setTimeout(() => console.log(3), 0);
+  Promise.resolve(true).then(() => console.log(4));
+  console.log(5);
+})();
+```
+1 5 4 0 2
+Cycle 1:
+
+`setInterval` is scheduled as task
+`setTimeout 1` is scheduled as task
+in `Promise.resolve 1` both `then`s are scheduled as microtasks
+the stack is empty, microtasks are run
+Task queue: setInterval, setTimeout 1
+
+Cycle 2:
+
+the microtask queue is empty, `setInteval`'s handler can be run, another `setInterval` is scheduled as a task, right behind `setTimeout 1`
+
+=====================================================================================
