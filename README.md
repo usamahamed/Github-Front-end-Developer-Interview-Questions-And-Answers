@@ -734,8 +734,9 @@ function somePromiseAPI() {
     }).then(/* ... */);
 }
 ```
-// Promise.reject() will return a promise that is immediately rejected.
+ Promise.reject() will return a promise that is immediately rejected.
 Promise.reject(new Error(console.log('some awful error')));
+
 =====================================================================================
 
 <div id="selectio">Select me!</div>
@@ -755,7 +756,6 @@ Promise.reject(new Error(console.log('some awful error')));
         }
     }
 </script>
-
 ```
 =====================================================================================
 Given an array of numbers, you should find the number which occurs an odd number of times within the array. 
