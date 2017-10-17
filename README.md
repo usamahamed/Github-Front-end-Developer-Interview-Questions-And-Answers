@@ -1039,4 +1039,69 @@ how to check if something is object?
 
 https://stackoverflow.com/questions/8511281/check-if-a-value-is-an-object-in-javascript
 
+=====================================================================================
+// What is the output? Fix code
+```
+var person = {
+  name: "Sam",
+  hello: function() {
+    alert(this.name);
+  }
+};
+
+var hello = person.hello;
+hello(); // Make it to output "Sam"
+```
+
+```
+var person = {
+  name: "Sam",
+  hello: function() {
+    alert(this.name);
+  }
+};
+
+var hello = person.hello.bind(person);
+hello(); // Make it to output "Sam"
+```
+
+// What is the output?
+```
+var fn = {};
+function valueAccessor(value) {
+  var accessor = function(newValue) {
+    if(arguments.length === 0) {
+      return value;
+    }
+    value = newValue;
+  };
+  accessor.__proto__ = fn;
+  return accessor;
+}
+var a = valueAccessor(5);
+fn.incrementValue = function() { this(this() + 1); };
+a.incrementValue();
+a(); //print 6
+```
+
+// Update code for conditions
+```
+function A() {
+  this.value = 1;
+}
+var B = function() {} ;
+/* put your code here */
+var b = new B;
+b.value === undefined; // should be true
+b instanceof A; // should be true
+```
+
+ difference in next methods? 
+ (a instanceof Array) vs (Array.isArray(a));
+ http://stackoverflow.com/questions/22289727/difference-between-using-array-isarray-and-instanceof-array
+ generally use Object.prototype.toString.call(obj)=[Object Array]
+ 
+ // implement function, which can't be used as constructor ( with `new` keyword )
+Generally arrow function can't instintiatied with new 
+
 
