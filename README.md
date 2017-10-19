@@ -1104,4 +1104,78 @@ b instanceof A; // should be true
  // implement function, which can't be used as constructor ( with `new` keyword )
 Generally arrow function can't instintiatied with new 
 
+=====================================================================================
+# debounce
+```
+// Create JD Object
+// ----------------
+var JD = {};
 
+// Debounce Method
+// ---------------
+JD.debounce = function(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this,
+            args = arguments;
+        var later = function() {
+            timeout = null;
+            if ( !immediate ) {
+                func.apply(context, args);
+            }
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait || 200);
+        if ( callNow ) { 
+            func.apply(context, args);
+        }
+    };
+};
+```
+#throttle
+```
+function throttle(func, delay) {
+  let timeout = null
+  return function(...args) {
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        func.call(this, ...args)
+        timeout = null
+      }, delay)
+    }
+  }
+}
+```
+#curry
+```
+
+function curry(f) {
+	function curryAux(func, args) {
+		return function() {
+			var newArgs = args.concat(Array.prototype.slice.call(arguments));
+			if (newArgs.length === func.length) {
+				return func.apply(null, newArgs);
+			} else {
+				return curryAux(func, newArgs);
+			}
+		};
+	}
+
+	return curryAux(f, []);
+};
+
+function add(a, b, c) {
+	return a+b+c;
+};
+function leq(a, b) {
+	return a <= b;
+}
+var curryAdd = curry(add);
+var curryLeq = curry(leq);
+console.log(curryAdd(1)(2)(3));
+console.log(curryAdd(1, 2)(3));
+console.log(curryAdd(1)(2, 3));
+console.log(curryLeq(3, 4));
+console.log(curryLeq(3)(4));
+```
