@@ -236,3 +236,99 @@ https://seclab.stanford.edu/websec/framebusting/framebust.pdf
 ## API
 
 https://github.com/shieldfy/API-Security-Checklist
+
+# Talk about your understanding of front-end engineering
+
+Front-end engineering is nothing more than two points, specification and automation.
+
+Including team development specification, modular development, component development, component warehouse, performance optimization, deployment, testing, development process, development tools, scaffolding, git workflow, teamwork
+
+1. Build tools 2. Continuous integration 3. System testing 4. Log statistics 5. On-line deployment 6. Agile development 7. Performance optimization 8. Fundamental framework
+
+# Advantages and disadvantages of bidirectional binding and unidirectional data binding
+
+Only UI controls exist only two-way, non-UI controls only one way. The advantage of unidirectional binding is that it can bring unidirectional data flow. The advantage is that the flow direction can be tracked, flowing in a single state, and there is no state, which makes it possible to avoid the problem of state management when the complexity increases , The commissioning of the program will become relatively easy. One-way data flow is more conducive to the maintenance and optimization of the state, more conducive to communication between components, more conducive to component reuse
+
+Advantages of bidirectional data streams:
+(CRD (Create, Retrieve, Update, Delete) operations that do not require unidirectional data binding; bidirectional binding in some situations that require real-time response to user input that is very user-friendly The changes in the view are automatically synchronized to the data model The change in the value of the data model will be immediately synchronized to the view;
+
+Disadvantages:
+The bi-directional data stream is an automatic management state, but there are many logic in the practical application that have to deal with the state change manually, so that the complexity of the program can not track the change of the local state, the bidirectional data flow, the value and the UI binding, Data interdependence is bound to each other, leading to the source of data problems difficult to be tracked
+
+# Two ways to implement front-end routing
+
+HTML5 History Two new APIs: history.pushState and history.replaceState, both APIs will operate the browser's history without causing page refreshes.
+
+Hash is the url to see #, we need a monitor hash changes triggered by the event (hashchange) events. We do not re-render the page with the window.location, but instead use the new page in the history so that we can jump to the page to register the ajax in the hashchange event to change the page content. You can add a listening event for a change to a hash:
+
+window.addEventListener("hashchange", funcRef, false)
+advantage
+From the point of view of performance and user experience, back-end routing sends a request to the server each time a new page is accessed, and the server responds to the request, and there is a delay in the process. And front-end routing in a new page when the visit is just a change of the path only, there is no network delay, for the user experience will be a considerable increase.
+
+There are many advantages of front-end routing, such as page persistence, like most music sites, you can play the song at the same time, jump to another page and the music is not interrupted, such as the front and back completely separated. The development of a front-end routing, the main consideration to the page can be pluggable, the page life cycle, memory management.
+
+Disadvantages
+Use the browser forward, back button when the request will be re-sent, there is no reasonable use of the cache.
+
+History interface provides two new methods: pushState(), replaceState()allows us to modify the browser history stack:
+``
+window.history.pushState(stateObject, title, URL)
+window.history.replaceState(stateObject, title, URL)
+``
+# Browser Rendering Principle Resolution
+
+
+
+1, the first rendering engine to download HTML, parsing DOM Tree generated
+
+2, encounter css tags or JS script tags on the new thread to download them, and continue to build DOM. (Where css is an asynchronous download sync) The browser engine builds a Rendering Tree with DOM Tree and CSS Rule Tree
+
+3, through the CSS Rule Tree to match the DOM Tree positioning coordinates and size, this process is called Flow or Layout.
+
+4, the final process by calling the Native GUI API drawing page process called Paint.
+
+When the user interacts with each other when browsing the web or changes the page structure through the js script, some of the above operations may run repeatedly. This process is called Repaint or Reflow. Rearrangement means that the dom tree structure changes, the need to rebuild the dom structure. Redrawing means that the dom node style changes and is redrawn. Rearrangement will bring redrawing, redrawing is not necessarily rearranged.
+
+How to reduce the browser rearrangement: the elements that will need to be rearranged repeatedly, the position property is set to absolute or fixed, so that the element is out of the document flow and its changes do not affect the other elements.
+
+## Restful
+
+REST (Representational State Transfer) REST means characterization of state transition, is a kind of HTTP application based on the network application interface style, make full use of HTTP method to achieve a unified style interface services, HTTP defines the following eight standard methods:
+
+GET: Request to get the specified resource
+HEAD: Requests the response header of the specified resource
+PUT: The request server stores a resource according to the REST design pattern, which is typically used to implement the following functions: GET, POST, PUT, DELETE,
+
+# Talk about the observer pattern
+
+JS in the realization of the observer pattern is achieved via a callback ,, which defines the relationship of one to many observers have multiple objects simultaneously monitor a particular theme objects
+
+Observer pattern: a program in a real-time observation of the object, when the object state changes notify
+
+Why do we use the observer pattern, can be achieved mainly loosely coupled code, what does that mean? That is, between the main body and subscribers are independent of each other, both of which can run independently.
+
+# The difference between GET and POST
+
+GET using a URL or Cookie mass participation, and POST data in BODY, this is because the HTTP protocol usage conventions. Not their own differences.
+GET submission of data has a length limit, the POST data can be very large, this is because they are used to distinguish between different operating system and browser settings caused. Nor is the difference between GET and POST itself.
+POST than GET security, because the data is not visible in the address bar, this argument is not wrong, but still not the difference between GET and POST itself.
+The biggest difference between GET and POST GET request is mainly the idempotency, POST requests are not. (Idempotent: multiple requests for the same URL should return the same results.) Because the get request is idempotent, in the network of tunnels will not try and try again. If the request by data get, there will be the risk of repetitive operation, and this operation is repeated may lead to side effects
+
+# Front-end rendering advantages
+
+Partial refresh. You do not need to complete every page request
+Lazy loading. As only the initial load when the page data in the visible region after scroll rp loading other data, can be achieved by react-lazyload
+Rich interaction. Use JS achieve a variety of cool effects
+Save server costs. Saving money, JS support for CDN deployment, and deployment is extremely simple and requires only the server can support static files
+Natural separation of concerns design. Provide an interface to access the database server, JS only concerned with data acquisition and presentation
+JS learn once, use everywhere. It can be used to develop Web, Serve, Mobile, Desktop types of applications
+
+# The advantages of server-side rendering
+
+Better SEO, because the search engine crawlers crawlers can view fully rendered page.
+
+After the end of the service rendered do not need to download a bunch of js and css to see the page (the first screen performance)
+
+Side rendering services without concern for browser compatibility issues (casual browser development, the advantage gradually disappear)
+
+For the power not to force mobile phone or tablet, reducing the consumption of electricity in the client is very important
