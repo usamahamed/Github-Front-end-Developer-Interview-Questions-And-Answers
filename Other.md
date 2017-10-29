@@ -353,3 +353,85 @@ For the power not to force mobile phone or tablet, reducing the consumption of e
   to sum up:
     - For get, it is the server to request data, its request is visible in the url, its length is limited (2048 characters) individual method is safe idempotent, where security is used to obtain information rather than modify information, power And so on means that each request is the same result.
     - for the post, is to submit data to the server, each refresh or back will be re-submitted, post request data encapsulated in the http request header.
+    
+ ###   Why is it more efficient to use multiple domain names to store site resources?
+
+CDN cache is more convenient 
+Break the browser concurrency restrictions 
+Save cookie bandwidth 
+Saving the number of primary domain name connections, optimizing page response speed 
+To prevent unnecessary security problems
+
+## What are the image formats used to know how to create a web page?
+
+　　Answer:
+
+　　png-8, png-24, jpeg, gif, svg.
+
+　　But none of the above is the last answer the interviewer wants. The interviewer wants to hear is Webp, Apng . (Whether it's concerned about new technology, new things)
+
+　　Popular science Webp : WebP format, Google (google) developed a picture to speed up the image loading speed of the picture format. Picture compression volume is only about 2/3 of JPEG, and can save a lot of server bandwidth resources and data space. Facebook Ebay and other well-known sites have begun to test and use the WebP format.
+
+　　In the same quality, WebP format images are 40% smaller than JPEG images.
+
+　　Apng : full name is "Animated Portable Network Graphics" , PNG bitmap animation expansion, you can achieve png format dynamic picture effects. 04 was born, but has not been the major browser manufacturers support, until recently got iOS safari 8 support, is expected to replace the GIF as the next generation dynamic map standard.
+# large number of pictures on the page (large electricity business website), loading is very slow, what methods do you have to optimize the loading of these pictures, give users a better experience.
+
+Image lazy loading, in the page can not add a visible area of ​​a scroll bar event to determine the location of the picture and the top of the browser and the distance between the page, if the former is less than the latter, the priority load.
+If you are using slides, albums, etc., you can use the image preload technology, the current display of the previous picture and a priority download.
+If the picture for the css picture, you can use CSSsprite, SVGsprite, Iconfont, Base64 and other technologies.
+If the picture is too large, you can use a special encoding of the picture, the load will first load a compressed special powerful thumbnails to improve the user experience.
+If the image display area is smaller than the actual size of the picture, the image compression is followed by the image compression in front of the server according to the business needs. 
+
+## How do you understand the semantics of HTML structures?　　
+
+Removed or when the style is lost to make the page show a clear structure:
+html itself is not performance, we see such as <h1> is bold, font size 2em, bold; <strong> is bold, do not think this is html performance, these in fact html default css style in the Role, so when the removal or style is lost when the page can make a clear structure is not the advantages of semantic HTML structure, but the browser has a default style, the default style is also intended to better express the semantics of html, it can be said The browser's default style and semantic HTML structure are inseparable.
+
+The screen reader (if the visitor has a visually impaired) will "read" your page entirely based on your markup.
+　　For example, if you use a semantic markup, the screen reader will "spell out your words one by one" instead of trying to pronounce it completely.
+
+PDA, mobile phones and other devices may not be the same as the ordinary computer's browser to render the same page (usually because these devices support CSS is weak)
+
+### Talk about the front end of the point of doing SEO need to consider what?
+
+Learn how search engines crawl web pages and how to index web pages
+　　You need to know the basic working principle of some search engines, the difference between the various search engines, search robot (SE robot or web crawler) how to work, how to search engine search results sort.
+
+Meta tag optimization
+　　It mainly includes Title, Website Description, and Keywords. There are other hidden words such as Author, Category, Language, and so on.
+
+How to select keywords and place keywords in web pages
+　　Search would have to use keywords. Keyword analysis and selection is one of SEO's most important jobs. First of all, to the site to determine the main keywords (usually in the five up and down), and then optimized for these keywords, including the keyword density (Density), relevance (Relavancy), highlight (Prominency) and so on.
+
+Learn about the major search engines
+　　Although there are many search engines, but the decision on the site traffic on the so few. Such as English, mainly Google, Yahoo, Bing, etc .; Chinese Baidu, Sogou, proper way. Different search engines on the page crawl and index, sort the rules are not the same. But also to understand the search portal and the relationship between search engines, such as AOL web search using Google's search technology, MSN is Bing's technology.
+
+The main Internet directory
+　　Open Directory itself is not a search engine, but a large site directory, he and the search engine is the main difference between the way the site content is collected in different ways. Directory is manually edited, mainly included site home page; search engine is automatically collected, in addition to the main page also crawls a lot of content pages.
+
+Pay-per-click search engine
+　　Search engines also need to survive, with the Internet business more and more mature, charging the search engine also began to flourish. The most typical of Overture and Baidu, of course, including Google's advertising program Google Adwords. More and more people through the search engine click advertising to locate the business site, which also has a great optimization and ranking of knowledge, you have to learn to use the least advertising to get the most clicks.
+
+Search engine login
+　　After the site is done, do not lie there waiting for the guests to fall from the sky. The easiest way to get someone to find you is to submit the site to the search engine. If you are a commercial site, the main search engine and directory will ask you to pay for the collection (such as Yahoo to 299 US dollars), but the good news is (at least so far) the largest search engine Google is still free, and it dominates With more than 60% of the search market.
+
+Link Popularization and Link Popularity
+　　Web content is hyperlinked to the way Hypertext (Hypertext), the same is true between sites. In addition to the search engine, people also surfing ("surfing") daily through links between different sites. The more links to other sites to your site, you will get more visits. What's more, the more the number of external links your site will be, the greater the importance of the search engine, and give you a higher ranking.
+
+Use reasonable labels 
+　　Use semantic tags to ensure that these devices render the web in a meaningful way. Ideally, the task of viewing the device is to match the device's own conditions to render the page.
+
+　　The semantic markup provides the necessary information for the device, eliminating the need for yourself to consider all possible display situations (including existing or future new devices). For example, a cell phone can choose to make a title The text is displayed in bold, and the handheld may be displayed in a larger font. Whichever way you mark the text as a title, you can be sure that the reading device will display the page appropriately according to its own condition.
+
+Search engine crawlers also rely on tags to determine the context and the weight of each keyword
+　　In the past you may have not yet considered the search engine crawler is also the site of the "visitors", but now they are actually extremely valuable users. Without them, the search engine will not be able to index your site and then the average user will be hard to come over The
+
+Whether your page is easy to understand the crawler is important, because the crawler will largely ignore the mark for the performance, but only focus on semantic markup.
+　　Therefore, if the page file's title is marked instead of, then the page may be relatively backward in the search results. In addition to enhancing ease of use, the semantic markup facilitates the proper use of CSS and JavaScript, since it itself provides many "Hook" to apply the page style and behavior. 
+SEO mainly depends on the content of your site and external links.
+
+Easy to team development and maintenance
+　　W3C gave us a very good standard, in the team we all follow this standard, you can reduce a lot of different things, easy to develop and maintain, improve development efficiency, and even achieve modular development .
+  
+  
