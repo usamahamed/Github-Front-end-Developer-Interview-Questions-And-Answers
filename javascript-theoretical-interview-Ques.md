@@ -518,6 +518,370 @@ Be aware of which CSS properties trigger reflow, repaint and compositing. Avoid 
 
 Use `@font-face` and define `font-family` for different `font-weight`s.
 
+### Q: Is the CSS attribute case sensitive?
+
+ ```
+ ul {
+     MaRGin: 10px;
+ }
+ ```
+A: No distinction. HTML, CSS are case-insensitive, but in order to better readability and team collaboration are generally lowercase, and in XHTML elements in the name and attributes must be lowercase.
+
+### Q: Inline element setting margin-topand margin-bottomwhether it works?
+
+A: does not work. (The answer is working, and I feel wrong.)
+
+The elements in html are divided into replaced elements and non-replaced elements.
+
+A replacement element is an element that is used as a placeholder for other content. The most typical is imgthat it just points to an image file. As well as most form elements are also replaced, for example input.
+A non-replacement element is an element that contains content in a document. For example, if a paragraph's text is placed within the element itself, the paragraph is a non-replacement element.
+Discussion margin-topand margin-bottomwhether the elements within the line play a role, it is necessary to replace the elements and non-replacement elements within the line were discussed.
+
+First, we should be aware that the outer margin can be applied to the inline elements, which is allowed in the specification, but because there is no effect on the line-height applied to the outer edge of the non-replacement element in a row. Since the outer margin is actually transparent. So the statement margin-topand margin-bottomno visual effect. The reason for this is that the outer margin of the non-replacement element in the row does not change the row height of an element. And for the row of non-replacement elements of the left and right margins is not the case, is influential.
+
+The outer margin set for the replacement element will affect the row height, which may increase or decrease the row height, depending on the value of the upper and lower margins. The left and right margins of the inline substitution elements are the same as the left and right margins of the non-replacement elements. Take a look at demo:
+
+http://codepen.io/paddingme/pen/JwCDF
+
+### Q: Does the inline element set padding-topand padding-bottomincrease its height? (Where setting is padding-top and padding-bottom on an inline element add to its dimensions?)
+
+A: The answer is no. With the title of the more tangled, do not understand the meaning of the square is in the end what is the meaning? Put aside, let's analyze the next. For inline elements, set the left and right margins, the left and right margins will be visible. And set the upper and lower margins, set the background color can be seen after the edge area has increased, for the line does not replace the elements, will not affect the line high, will not stretch the parent element. For the replacement element, the parent element is distracted. Look at the demo, a better understanding:
+
+http://codepen.io/paddingme/pen/CnFpa
+
+### Q: Set pof font-size:10remwhen the user resets or drag the browser window, whether the text size will also change with?
+
+A: No.
+
+remIs the relative unit of measure based on the size of the htmlroot element, and font-sizethe size of the text does not change as the size of the window changes.
+
+### Q: The pseudo-class selector :checkedwill be used with or without the inputtype .radiocheckboxoption
+
+A: No
+
+checkedThe definition of the pseudo-class selector is obvious:
+
+At The: the checked CSS pseudo-class Selector Represents by the any Radio ( <input type="radio">), the CheckBox ( <input type="checkbox">) or the Option ( <option>in A <select>) Element that IS the checked or s toggled to AN ON State at The the User CAN Change the this State by clicking ON at The Element, or the Selecting A Different. value, in which case the: checked pseudo-class no longer cases to this element, but will to the relevant one.
+### Q: In the HTML text, the pseudo-class :rootalways points to the htmlelement?
+
+A: No (the answer is given == ||). The following excerpts : root and html in CSS3 refers to the same element? s answer:
+
+The root of a single finger. This root may not be html, if it is fragment html, did not create the root, then the root of the fragment. The following URL to support the data URL to see the browser (Firefox, Chrome, Safari, Opera), can be seen:
+data:application/xhtml+xml,<div xmlns="http://www.w3.org/1999/xhtml"><style>:root { background: green; } html { background: red !important; }</style></div>
+### Q: translate()Can the method move the position of an element on the z-axis?
+
+A: No. translate()The method can only change the displacement on the x-axis and y-axis.
+
+### Q: Is the color of the text "Sausage" in the following code?
+
+<ul class="shopping-list" id="awesome">
+    <li><span>Milk</span></li>
+    <li class="favorite" id="must-buy"><span class="highlight">Sausage</span></li>
+</ul>
+ul {color:red;}
+li {color:blue;}
+A: blue.
+
+### Q: Is the color of the text "Sausage" in the following code?
+
+<ul class="shopping-list" id="awesome">
+    <li><span>Milk</span></li>
+    <li class="favorite" id="must-buy"><span class="highlight">Sausage</span></li>
+</ul>
+ul {color:red;}
+#must-buy {color:blue;}
+A: blue.
+
+### Q: Is the color of the text "Sausage" in the following code?
+
+<ul class="shopping-list" id="awesome">
+    <li><span>Milk</span></li>
+    <li class="favorite" id="must-buy"><span class="highlight">Sausage</span></li>
+</ul>
+.shopping-list .favorite {
+    color: red;
+}
+#must-buy {
+    color: blue;
+}
+A: blue.
+
+### Q: Is the color of the text "Sausage" in the following code?
+
+<ul class="shopping-list" id="awesome">
+    <li><span>Milk</span></li>
+    <li class="favorite" id="must-buy"><span class="highlight">Sausage</span></li>
+</ul>
+ul#awesome {
+    color: red;
+}
+ul.shopping-list li.favorite span {
+    color: blue;
+}
+A: blue.
+
+### Q: Is the color of the text "Sausage" in the following code?
+
+<ul class="shopping-list" id="awesome">
+    <li><span>Milk</span></li>
+    <li class="favorite" id="must-buy"><span class="highlight">Sausage</span></li>
+</ul>
+ul#awesome #must-buy {
+    color: red;
+}
+.favorite span {
+    color: blue!important;
+}
+A: blue.
+
+### Q: Is the color of the text "Sausage" in the following code?
+
+<ul class="shopping-list" id="awesome">
+    <li><span>Milk</span></li>
+    <li class="favorite" id="must-buy"><span class="highlight">Sausage</span></li>
+</ul>
+ul.shopping-list li .highlight {
+    color: red;
+}
+ul.shopping-list li .highlight:nth-of-type(odd) {
+    color: blue;
+}
+A: blue.
+
+### Q: Is the color of the text "Sausage" in the following code?
+
+<ul class="shopping-list" id="awesome">
+    <li><span>Milk</span></li>
+    <li class="favorite" id="must-buy"><span class="highlight">Sausage</span></li>
+</ul>
+#awesome .favorite:not(#awesome) .highlight {
+    color: red;
+}
+#awesome .highlight:nth-of-type(1):nth-last-of-type(1) {
+    color: blue;
+}
+A: blue.
+
+## Q: #exampleHow does the location change:
+
+<p id="example">Hello</p>
+#example {margin-bottom: -5px;}
+A: move up 5px.
+
+## Q: #exampleHow does the location change:
+
+<p id="example">Hello</p>
+#example {margin-left: -5px;}
+A: Move 5px to the left.
+
+#i-am-useless Will it be loaded by the browser?
+
+<div id="test1">
+    <span id="test2"></span>
+</div>
+#i-am-useless {background-image: url('mypic.jpg');}
+A: No
+
+mypic.jpg Will it be loaded by the browser?
+
+<div id="test1">
+    <span id="test2"></span>
+</div>
+#test2 {
+    background-image: url('mypic.jpg');
+    display: none;
+}
+A: will be downloaded.
+
+mypic.jpg Will it be loaded by the browser?
+
+<div id="test1">
+    <span id="test2"></span>
+</div>
+#test1 {
+    display: none;
+}
+#test2 {
+    background-image: url('mypic.jpg');
+    visibility: hidden;
+}
+A: will not be downloaded.
+
+## Q: onlyDoes the selector work?
+
+@media only screen and (max-width: 1024px) {argin: 0;}
+A: Stop the old version of the browser to parse the rest of the selector.
+
+only used to set a specific type of media that can be used to exclude browsers that do not support media queries. In fact, only a lot of time is used for those who do not support Media Query but support Media Type device hidden style sheet. There are devices that support media properties (Media Queries), the normal call style, this time when it does not exist; for does not support the media properties (Media Queries) but also supports the media type (Media Type) equipment, so that Do not read the style, because it first read only and not screen; also does not support Media Qqueries browser, whether or not support only, the style will not be used.
+
+## Q: overfloa:hiddenDoes the new block-level formatting context be formed?
+
+<div>
+    <p>I am floated</p>
+    <p>So am I</p>
+</div>
+div {overflow: hidden;}
+p {float: left;}
+A: will be formed.
+
+The conditions that will trigger BFC are:
+
+The value of float is none.
+overflow value is not visible.
+The display value is any of the table-cell, table-caption, and inline-blocks.
+The value of position is not relative and static.
+## Q: screenDoes the keyword mean the size of the device's physical screen or the browser's window?
+
+@media only screen and (max-width: 1024px) {margin: 0;}
+A: browser window
+
+Summary of knowledge points
+
+Tips: According to the above test points under the following knowledge points, the latter will write articles to summarize, here only pick out the key to analysis.
+
+For the CSS selector and the knowledge of the priority, see the following article:
+
+CSS selector reference manual
+CSS selector notes
+Advanced CSS Style Selector
+Conquer the advanced CSS selector
+Detailed CSS selector, priority and matching principle
+priority
+Remember the use of 31 CSS selectors
+# How to calculate the priority:
+
+So how do you calculate the priority of the specified selector? If you consider that the four numbers separated by commas are preferred, such as 1, 1, 1, 1, or 0, 2, 0, 1
+The first number (a) is usually 0 unless the style attribute is used on the label;
+The second number (b) is the sum of the number of ids on the selector;
+The third number (c) is the sum of the other attribute selectors and pseudo classes used on the selector. This includes class (.example) and attribute selectors (for example li[id=red]);
+The fourth number (d) calculates the elements (like table, p, div, etc.) and pseudo elements (like first-line)
+The general selector (*) is 0 priority;
+If the two selectors have the same priority, the latter in the style sheet works.
+Browser CSS Matching order:
+
+The browser CSS does not look from left to right, but from right to left. For example #divBox p span.red{color:red;}, the browser to find the order is as follows: first search html all class = 'red' span element, find, and then find their parent elements in the p element, and then determine whether the parent of the p id is divBox div elements, if they are present. The right thing to look for from right to left is to filter out unrelated style rules and elements as early as possible.
+
+display:noneAnd visibilty:hiddenthe difference between:
+
+
+# Q: <keygen> is the correct HTML5 tag?
+
+A: Yes.
+
+The <keygen> tag specifies the key pair generator field for the form. When the form is submitted, the private key is stored locally and the public key is sent to the server. Is the HTML5 tag.
+
+# Q: Can the <bdo> tag change the text orientation?
+
+A: Yes.
+
+The <bdo> tag overrides the default text orientation.
+
+<bdo dir = "rtl"> Here is some text </ bdo>
+# Q: Is the following HTML code correct?
+
+<figure>
+    <img src = "myimage.jpg" alt = "My image">
+    <figcaption>
+        <p> This is my self portrait. </ p>
+    </ figcaption>
+</ figure>
+A: Right
+
+The <figure> tag specifies separate stream content (images, charts, photos, codes, etc.). The contents of the figure element should be related to the main content, but if deleted, the document flow should not be affected. Use the <figcaption> element to add a caption to the figure.
+
+# Q: Which case should I use the small tag? When you want to create a subtitle after the h1 title Or when the footer inside the increase in copyright information?
+
+A: small labels General use scenes are used in copyright information and legal texts, or you can use annotation extensions (visible in bootstrap) in the title, but can not be used to create subtitles.
+
+The HTML small element (<small>) makes the text font size one size smaller (for example, from large to medium, or from small to x-small) down to the browser's smallest font size. In HTML5, this element is repurposed to represent side-comments and small print, including copyright and legal text, independent of its styled presentation.
+  
+# Q: in a well-structured web page, a number of h1 tags will not help SEO?
+
+A: No effect.
+
+According to Matt Cutts (lead of Google's webspam team and the de facto expert on these things), using multiple <h1> tags is fine, as long as you're not abusing it (like sticking your whole page in an <h1> and using CSS to style it back to normal size. That would have no effect, and might trigger a penalty, as it looks spammy.
+If you have multiple headings and it would be natural to use multiple <h1> 's, then go for it.
+From: http://www.quora.com/Does-using-multiple-h1-tags-on-a-page-affect-search-engine-rankings
+
+# Q: If you have a search results page, you want to highlight the search keywords. What HTML tags can I use?
+
+A: The <mark> tag highlights the text.
+
+The HTML is not used in a particular context. For example it can be used in a page showing search results to highlight every instance of the searched for word.
+# Q: What is the scope attribute in the following code?
+
+<article>
+    <h1> Hello World </ h1>
+    <style scoped>
+        p {
+            color: # FF0;
+        }
+    </ style>
+    <p> This is my text </ p>
+</ article>
+
+<article>
+    <h1> This is awesome </ h1>
+    <p> I am some other text </ p>
+</ article>
+A: The scoped property is a boolean property. If you use this property, the style is applied only to the parent element of the style element and its child elements.
+
+Does HTML5 support block-level hyperlinks? E.g:
+
+<article>
+    <a href="#">
+        <h1> Hello </ h1>
+        <p> I am some text </ p>
+    </a>
+</ article>
+A: support.
+
+The <a> element in HTML5 is represented as a hyperlink that supports any inline elements and block-level elements.
+
+# Q: Will the new HTTP request be triggered when the following HTML code is loaded?
+
+<img src = "mypic.jpg" style = "visibility: hidden" alt = "My picture">
+A: it will be wow
+
+# Q: Will the new HTTP request be triggered when the following HTML code is loaded?
+
+<div style = "display: none;">
+    <img src = "mypic.jpg" alt = "My photo">
+</ div>
+A: Yes!
+
+will main1.css be loaded and compiled in alert ('Hello world')?
+
+<head>
+    <link href = "main1.css" rel = "stylesheet">
+    <script>
+        alert ('Hello World');
+    </ script>
+</ head>
+A: Yes!
+
+# Q: before the main2.css get1 must be downloaded analysis?
+
+<head>
+    <link href = "main1.css" rel = "stylesheet">
+    <link href = "main2.css" rel = "stylesheet">
+</ head>
+A: no!
+
+# Q: will the main2.css be loaded after Paragraph 1 is loaded?
+
+<head>
+    <link href = "main1.css" rel = "stylesheet">
+</ head>
+<body>
+    <p> Paragraph 1 </ p>
+    <p> Paragraph 2 </ p>
+    <link href = "main2.css" rel = "stylesheet">
+</ body>
+A: yes!
+
+
+
 ### Explain how a browser determines what elements match a CSS selector.
 
 This part is related to the above about writing efficient CSS. Browsers match selectors from rightmost (key selector) to left. Browsers filter out elements in the DOM according to the key selector, and traverse up its parent elements to determine matches. The shorter the length of the selector chain, the faster the browser can determine if that element matches the selector.
