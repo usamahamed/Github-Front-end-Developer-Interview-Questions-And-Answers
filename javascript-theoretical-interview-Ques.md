@@ -142,6 +142,35 @@ Basically the problems lie in the differences between parsing HTML and XML as me
 
 - https://developer.mozilla.org/en-US/docs/Quirks_Mode_and_Standards_Mode#XHTML
 
+## What is the Quirks mode? What is the difference between it and the Standards model?
+
+　　Answer:
+
+　　Starting with IE6, the Standards model was introduced. In standard mode, the browser tried to get the correct processing of the standard document to the specified level in the specified browser.
+
+　　IE6 before IE is not mature enough, so IE5 browser before the CSS support is poor, IE6 will provide better support for CSS, but then the problem came, because there are many pages based on the old layout Way to write, and if IE6 support CSS will make these pages display is not normal, how to ensure that does not destroy the existing page, but also provide a new rendering mechanism?
+
+　　In the process of writing we will often encounter such a problem, how to ensure that the original interface unchanged, but also provide more powerful features, especially when the new features are not compatible with the old features. One common practice when dealing with this problem is to add parameters and branches, that is, when a parameter is true, we use the new function, and if this parameter is not true, the use of old features, so that can not destroy The original program, but also provide new features. IE6 is similar to this, it will DTD as the "parameters", because the previous page we will not write DTD, so IE6 assumes that if you write a DTD, it means that this page will be used to support CSS better Of the layout, and if not, then the use of compatible with the layout before. This is the Quirks mode (quirks mode, weird mode, weird mode).
+
+　　the difference:
+
+　　There will be layout, style analysis and script implementation of the three differences.
+  
+ ## a: img alt and title What is the same? b: strong and em similarities and differences?
+
+　　Answer:
+
+　　a:
+
+alt (alt text): User agent (UA) for which images, forms, or applets can not be displayed, and the alt attribute is used to specify replacement text. The language of the replacement text is specified by the lang attribute. (In the IE browser will be no title when the alt as tool tip display)
+title (tool tip): This attribute provides the recommended information for the element that sets the attribute.
+　　b:
+
+strong: bold emphasis on the label, stressed that the importance of the content
+em: italic emphasis on the label, more strongly stressed that the contents of the emphasis points
+
+
+
 ### How do you serve a page with content in multiple languages?
 
 The question is a little vague, I will assume that it is asking about the most common case, which is how to serve a page with content available in multiple languages, but the content within the page should be displayed only in one consistent language.
@@ -318,6 +347,20 @@ Alternatively, give `overflow: auto` or `overflow: hidden` property to the paren
 
 ###### References
 
+## What is the outer margin overlap? What is the result of the overlap?
+
+　　Answer:
+
+　　The outer margin is margin-collapse.
+
+　　In CSS, the outer margins of two adjacent boxes (which may be brotherly relationships may also be ancestral relationships) can be combined into a separate margin. This way of merging the outer margins is called folding, and thus the bounds of the outer margins are called folded outer margins.
+
+　　The folding results follow the following calculation rules:
+
+When two adjacent outer margins are positive, the result of folding is a large value between them .
+When two adjacent outer margins are negative, the result of the folding is a larger value of the absolute value of the two .
+When the two margins are positive and negative, the result of the folding is the sum of the two .
+
 - https://css-tricks.com/all-about-floats/
 
 ### Describe `z-index` and how stacking context is formed.
@@ -335,6 +378,8 @@ Each stacking context is self-contained - after the element's contents are stack
 - https://css-tricks.com/almanac/properties/z/z-index/
 - https://philipwalton.com/articles/what-no-one-told-you-about-z-index/
 - https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
+
+
 
 ### Describe Block Formatting Context (BFC) and how it works.
 
