@@ -332,3 +332,24 @@ After the end of the service rendered do not need to download a bunch of js and 
 Side rendering services without concern for browser compatibility issues (casual browser development, the advantage gradually disappear)
 
 For the power not to force mobile phone or tablet, reducing the consumption of electricity in the client is very important
+
+
+* Please describe the difference between `` `` `` `` `` `` `` ``
+
+  A: The difference is as follows:
+  * get to the specified resource request data, the requested data will be attached to the URL, that is, the data placed in the request line (request line)), to split the URL and transfer data, multiple parameters with &
+  * post Submit the data to be processed to the specified resource. get method, the query request is displayed in the url, there is a length limit, get method is safe idempotent. The post method request is encapsulated in the http message body
+
+   & | get | post
+  --- | --- | ----
+  Back / refresh | harmless | request to resubmit
+  Bookmark | do bookmark | do not do
+  Cache | can be cached | can not be cached
+  History | keep in the browser record | not keep
+  On data length limit | limit (2048 characters) | not limited
+  Security | Visible data in url | Relatively safe
+  Visible | visible in url | not visible
+
+  to sum up:
+    - For get, it is the server to request data, its request is visible in the url, its length is limited (2048 characters) individual method is safe idempotent, where security is used to obtain information rather than modify information, power And so on means that each request is the same result.
+    - for the post, is to submit data to the server, each refresh or back will be re-submitted, post request data encapsulated in the http request header.
