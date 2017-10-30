@@ -51,6 +51,26 @@ var result = spiralTraversal(input);
 console.log('result', result);
 ```
 =====================================================================================
+
+# find prime numbers under max
+```
+function getPrimes(max) {
+    var sieve = [], i, j, primes = [];
+    for (i = 2; i <= max; ++i) {
+        if (!sieve[i]) {
+            // i has not been marked -- it is prime
+            primes.push(i);
+            for (j = i << 1; j <= max; j += i) {
+                sieve[j] = true;
+            }
+        }
+    }
+    return primes;
+}
+
+```
+
+=====================================================================================
 // Sort array with semver-rules
 var arr = [ "1.0.5", "2.5.0", "0.12.0", "1", "1.23.45", "1.4.50", "1.2.3.4.5.6.7"];
 
