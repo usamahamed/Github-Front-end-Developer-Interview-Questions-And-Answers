@@ -1,3 +1,26 @@
+## Q: Enter the url from the browser address to the page (see HTTP)
+
+A:
+
+The browser enters the URL
+The browser to view the cache, if the request resources in the cache and the latest, jump to the transcoding step, if the request resource is not cached, initiate a new request, which checks whether the latest is controlled by two HTTP headers Expires and Cache-control
+The browser resolves the URL acquisition protocol, host port, path
+The browser assembles an HTTP (GET) request message
+The browser to obtain the host ip address, which by the process: the browser cache - the local cache -hosts file - router cache-DNS DNS cache-DNS recursive query (may load equal to each time ip is not the same)
+Open a socket with the target ip address, the port to establish TCP link, three times the handshake
+After the TCP link is established, the HTTP request is sent
+The server accepts the request and parses the request to the service program, such as the virtual host using the HTTP Host header to determine the requested service routine
+The server checks whether the HTTP request header contains the cache authentication information. If the authentication cache information is up-to-date, it returns the corresponding status code
+The handler reads the complete request and prepares the HTTP response, which may require querying the database
+The server response message is sent back to the browser via a TCP connection
+The browser receives the HTTP response, and then choose to close the TCP connection or keep the reuse, turn off the TCP connection four times the handshake
+The browser checks whether the response status code is 1XX, 3XX, 4XX, 5XX These cases are different from 2XX processing
+If the resource can be cached, cache it
+Decode the response (gzip compression)
+According to the type of resource determined if processed
+Parsing HTML documents, building DOM trees, downloading resources, constructing CSSOM trees, executing js scripts
+Show page (HTML page is progressively displayed during parsing)
+
 Browser
 ==
 
