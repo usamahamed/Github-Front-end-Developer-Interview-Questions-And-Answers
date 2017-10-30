@@ -52,6 +52,70 @@ console.log('result', result);
 ```
 =====================================================================================
 
+# Max product of 3 number
+```
+/**
+ * 
+ * highest product
+ * chris bautista <chris@codespud.ca>
+ * 
+ * */
+ 
+ 
+(function(){
+    
+    function highest_product(data){ 
+        
+        var product1, product2;
+        
+        if(arguments.length === 0) throw "missing arguments";
+        
+        if(!data.length) return ['must be an array of integers']
+        
+        data = data.sort(function(a, b){ return a - b;});
+        
+        // min1, min2, max1
+        product1 = data[0]*data[1]*data[data.length-1]; 
+        // max1, max2, max3
+        product2 = data[data.length-1] * data[data.length-2] * data[data.length-3];
+
+        return Math.max( product1 , product2 );
+        
+    }
+    
+    
+    console.log(highest_product([1,2,3,4]),24);
+    console.log(highest_product([-4,2,3,1]),6);
+    console.log(highest_product([-4,-2,-3,1]),12);
+    console.log(highest_product([-10,-10,1,3,2]),300);
+    console.log(highest_product([-1,-3,-10,1,3,2]),90);
+
+    
+    
+}());
+```
+=====================================================================================
+# find the product of every integer except the integer at that index
+```
+var a = [1, 7, 3, 4];
+var b = [];
+
+a.forEach(function( value_1 ) {
+    var product = 1;
+
+    a.forEach(function( value_2 ) {
+        if ( value_1 != value_2 )
+            product *= value_2;
+    });
+
+    b.push( product );
+});
+
+console.log( b ); // [84, 12, 28, 21]
+```
+=====================================================================================
+
+
 # find prime numbers under max
 ```
 function getPrimes(max) {
