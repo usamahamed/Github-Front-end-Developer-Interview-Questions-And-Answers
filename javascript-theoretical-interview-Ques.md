@@ -104,6 +104,12 @@ Moral of the story - just add `<!DOCTYPE html>` at the start of your page.
 
 - https://stackoverflow.com/questions/7695044/what-does-doctype-html-do
 - https://www.w3.org/QA/Tips/Doctype
+# What is semantic HTML?
+
+Intuitive awareness tags are good for crawling search engines and doing the right thing with the right tags! 
+html semantics is to make the contents of the page structure, easy to the browser, search engine resolution; 
+in the case of no CCS case is also a document format display, and is easy to read. The search engine crawler relies on the markup to determine the context and the weight of each keyword, which is good for SEO. 
+So that people who read the source code more likely to site the site block, easy to read maintenance understanding.
 
 ### What's the difference between full standards mode, almost standards mode and quirks mode?
 
@@ -273,6 +279,17 @@ An exception for positioning of `<script>`s at the bottom is when your script co
 
 - https://developer.yahoo.com/performance/rules.html#css_top
 
+# Talk about JavaScript scope chain
+
+When you execute a JavaScript code (global code or function), the JavaScript engine creates a scope for it, also known as the Execution Context, which first creates a global scope after the page loads, and then each time a function , Will establish a corresponding scope, which formed a scope chain. Each scope has a corresponding scope chain, the chain head is the global scope, the chain is the current function scope. 
+The role of the scope chain is used to parse the identifier. When the function is created (not executed), all the local variables in this and arguments are added to the current scope, and when JavaScript needs to be found Variable X (this process is called variable analysis), it will first from the scope chain chain is the current scope of the search for whether there is X attribute, if not found along the scope chain to continue to find, until the search To the chain header, that is, the global scope chain, still found the variable, then that the code does not exist on the scope of the x variable variable, and throw a reference error (ReferenceError) exception.
+
+# How to understand the JavaScript prototype chain
+
+Every object in JavaScript has a prototype property, which we call the prototype, and the prototype value is an object, so it also has its own prototype, so that it is a prototype chain, the chain of the chain is the object, Its prototype is special, the value is null. 
+The prototype function is used for object inheritance, and the prototype property of function A is an object. When this function is used as a constructor to create an instance, the prototype property of the function is assigned as a prototype to all object instances , Such as we create a new array, the array of methods from the array of inheritance from the prototype. 
+When you access a property of the object, the first look for the object itself, find the return; if not found, then continue to find the properties of its prototype object (if not found in fact, along the prototype chain to find up until the root) The As long as there is no coverage, the object prototype properties can be found in all instances, if the entire prototype is not found to return undefined
+
 ### What is progressive rendering?
 
 Progressive rendering is the name given to techniques used to improve performance of a webpage (in particular, improve perceived load time) to render content for display as quickly as possible.
@@ -346,6 +363,199 @@ The `.clearfix` hack uses a clever CSS pseudo selector (`:after`) to clear float
 Alternatively, give `overflow: auto` or `overflow: hidden` property to the parent element which will establish a new block formatting context inside the children and it will expand to contain its children.
 
 ###### References
+
+# write the following code in each browser in the color value?
+```
+background : red; // firefox 
+_background : green; // IE6 
+* background : blue; // IE6, IE7
+ background : black \ 9 ; // IE6 --- IE10
+```
+# Add some css to its level vertically.
+
+Use line-height=height
+```
+< div style = "` text-align: center; line-height: 200px; height: 200px; width: 200px; `" >  Yan Haijing </ div >
+```
+# to achieve a preloading picture, loaded after the show is displayed in the page and set its height of 50px, width of 50px;
+```
+function preloadPics (ARRS) { 
+        varARR = [];
+        varthe callback = function () {};
+        varindex =0;
+         function AddIndex () { 
+            index ++;
+            if (index == arrs.length) {
+                callback ();
+            }
+        }
+        for ( var i = 0 ; i <arrs.length; i ++) {
+            arr [i] = new Image ();
+            arr [i] .src = arrs [i];
+            arr [i] .onload = function () {  
+                addIndex ();
+            }
+        }
+        return {
+            done: function (c) {
+                callback = c || callback
+            }
+        }
+
+    }
+    preloadPics ([ 'a.jpg' ]). done ( function () { 
+        console .log ( 'load done' );
+    });
+```
+
+# simulation of a HashTable class, including add, remove, contains, length method;
+```
+function HashTable () { 
+        this.arr = [];
+    }
+    HashTable.prototype.add = function (data) { 
+        this .arr.push (data);
+    };
+    HashTable.prototype.remove = function (i) { 
+        if ( this .arr [i]) { delete  this .arr [i]; return  true ;}
+         return  false ;
+    };
+    HashTable.prototype.contains = function (data) { 
+        var index = this .arr.indexOf (data);
+         if (index! == - 1 ) { return  true ;}
+         else { return  false ;}
+    };
+    HashTable.prototype.length = function () { 
+        return  this .arr.length;
+    };
+    var c = new HashTable ();
+    c.add ( 'apple' );
+    c.add ( 'peach' );
+    c.add ( 'plum' );
+```
+
+# JS how to achieve object-oriented and inheritance mechanism?
+
+Constructor inheritance, prototyping inheritance, hybrid inheritance, parasitic inheritance
+
+The first three are class inheritance, the last one is the object inheritance. (The interviewer is so different. Although I do not recognize)
+
+# Constructor inheritance
+```
+function Super (a) { 
+    this.a = a;
+    this.func = function () {};
+}
+function Sub (a) { 
+    Super.call (this, a);
+}
+var obj = new Sub ();
+obj {
+    a: undefined ,
+    func: function () { }
+}
+```
+Prototype inheritance
+```
+function Super (a) { 
+    this.a = a;
+    this.func = function () {};
+}
+function Sub () { 
+}
+Sub.prototype = new Super ();
+Sub.prototype.constructor = Sub;
+var obj = new Sub ();
+obj {__proto __: {a: undefined , func: function () {} ,
+         constructor : function Sub () {} }} 
+ ```
+ 
+Mixed inheritance
+```
+function Super (a) { 
+    this.a = a;
+    this.func = function () {};
+}
+function Sub (a) { 
+    Super.call (this, a);
+}
+Sub.prototype = new Super ();
+Sub.prototype.constructor = Sub;
+var obj = new Sub ();
+obj {a: undefined , func: function () {} ,
+    __proto__: {a: undefined , func: function () {} ,
+         constructor : function Sub () {} }} 
+   ```
+   
+Parasitic inheritance
+```
+function Super (a) { 
+    this.a = a;
+    this.func = function () {};
+}
+Super.prototype.talk = function () { console .log ( 'talk' );}
+ function Sub (a) {  
+    Super.call ( this , a);
+}
+Sub.prototype = Object .create (Super.prototype);
+Sub.prototype.constructor = Sub;
+var obj = new Sub ();
+obj { a : undefined, func: function () { },
+    __ proto__ : { constructor : function Sub () { },
+        __ proto__ : { talk : function () {console. log ( 'talk' ) ; }
+             constructor : function  Super () { }
+        }
+
+    }
+}
+```
+# JS module packaging methods, such as how to achieve private variables, can not be directly assigned, only through public methods;
+
+Object-oriented private member
+```
+function P (pwd) { 
+    varpassword = pwd;
+     function getPasswd () {  
+        returnpassword;
+    }
+    this .pwdService = function () { 
+        return getPasswd ();
+    }
+}
+P.prototype.checkPwd = function (pwd) { 
+    return  this .pwdService () === pwd;
+}
+Protect pwd and getPwd, leaving only the check interface
+
+var P = new new P ( '1111' );
+ Console .log (p.checkPwd ( '1111' ));     //  to true 
+Console .log (p.password)    // undefined 
+Console .log (p.getPassword ())     / / Type error p.getPassword () is  not a function 
+console .log (p.getPassword)   // undefined
+```
+
+# the understanding of the closure, the benefits and disadvantages of closure?
+
+An internal function that accesses an external function variable.
+
+Advantages : You can simulate some of the features of oo (design private methods and variables. Make some more advanced js applications). Can prevent contamination between modules. Cache. 
+Anonymous self-executing functions, anonymous self-executing functions can reduce memory consumption.
+
+Disadvantages : possession of memory can not be released.
+
+Closures require more memory than the average function. Especially in the IE browser need attention. Because IE uses non-native javascript objects to implement DOM objects, closures can cause memory leaks, for example:
+```
+function A () {   
+      vara =document.createElement ("div"),//
+            msg ="Hello";  
+       a.onclick = function () {  
+          alert (msg);  
+          }  
+   }  
+ A ();
+ ```
+
+(Such as aleert (msg)), the function function (alert () () () () () () () () () () () () () () () () () () () () () () () () msg)) quotes ScopeA, which is a circular reference that will cause memory leaks in IE.
 
 ## What is the outer margin overlap? What is the result of the overlap?
 
