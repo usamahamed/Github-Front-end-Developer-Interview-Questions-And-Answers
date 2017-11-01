@@ -2306,3 +2306,500 @@ x-product::slotted(.product-name) {
 }
 ```
 
+## What are Web Components?
+
+Web Components consists of several separate technologies. You can think of Web Components as reusable user interface widgets that are created using open Web technology. They are part of the browser, and so they do not need external libraries like jQuery or Dojo. An existing Web Component can be used without writing code, simply by adding an import statement to an HTML page. Web Components use new or still-developing standard browser capabilities.
+
+Sometimes there is some confusion regarding Web Components and Google Polymer. Polymer is a framework that is based on Web Components technologies. You can make and use Web Components without Polymer.
+
+Web Components are not fully implemented in all browsers yet, and so to use them right now in most browsers (January 2015) you will probably need to use polyfills to fill in the gaps in browser coverage. Polyfills are available in the Google Polymer project.
+
+Web Components consists of these four technologies (although each can be used separately):
+
+Custom Elements
+HTML Templates
+Shadow DOM
+HTML Imports
+
+
+# What is browser repaint?
+
+A repaint occurs when changes are made to elements that affect visibility but not the layout. For example, opacity, background-color, visibility, and outline. Repaints are expensive because the browser must check the visibility of all other nodes in the DOM — one or more may have become visible beneath the changed element.
+
+Repaint is browser-blocking; neither the user or your application can perform other tasks during the time that a repaint occurring. In extreme cases, a CSS effect could lead to slower JavaScript execution. This is one of the reasons you encounter issues such as jerky scrolling and unresponsive interfaces.
+
+
+## What is browser reflow?
+
+Reflow is the name of the web browser process for re-calculating the positions and geometries of elements in the document, for the purpose of re-rendering part or all of the document. Because reflow is a user-blocking operation in the browser, it is useful for developers to understand how to improve reflow time and also to understand the effects of various document properties (DOM depth, CSS rule efficiency, different types of style changes) on reflow time. Sometimes reflowing a single element in the document may require reflowing its parent elements and also any elements which follow it.
+
+Reflow occurs when you:
+
+insert, remove or update an element in the DOM modify content on the page, e.g. the text in an input box move a DOM element animate a DOM element take measurements of an element such as offsetHeight or getComputedStyle change a CSS style change the className of an element add or remove a stylesheet resize the window scroll
+
+Guidelines
+
+Here are some easy guidelines to help you minimize reflow in your web pages:
+
+Reduce unnecessary DOM depth. Changes at one level in the DOM tree can cause changes at every level of the tree - all the way up to the root, and all the the way down into the children of the modified node. This leads to more time being spent performing reflow.
+Minimize CSS rules, and remove unused CSS rules.
+If you make complex rendering changes such as animations, do so out of the flow. Use position-absolute or position-fixed to accomplish this.
+Avoid unnecessary complex CSS selectors - descendant selectors in particular - which require more CPU power to do selector matching.
+Trigger only compositor properties:
+
+Stick to transform and opacity changes for your animations.
+Promote moving elements with will-change or translateZ.
+Avoid overusing promotion rules; layers require memory and management.
+
+
+## What is the pros and cons of using Proxy vs Getters and Setters?
+
+Getters and setters interception can be implemented with ES5 property accessors (getter/setter) instead of ES6 Proxies. Many popular libraries use this technique, for example MobX and Vue. Using proxies over accessors has two main advantages and a major disadvantage.
+
+Expando properties
+
+Expando properties are dynamically added properties in JavaScript. The ES5 technique does not support expando properties since accessors have to be predefined per property to be able to intercept operations. This is a technical reason why central stores with a predefined set of keys are trending nowadays.
+
+On the other hand, the Proxy technique does support expando properties, since proxies are defined per object and they intercept operations for every property of the object.
+
+A typical example where expando properties are crucial is with using arrays. JavaScript arrays are pretty much useless without the ability to add or remove items from them. ES5 data binding techniques usually hack around this problem by providing custom or overwritten Array methods.
+
+Getters and setters
+
+Libraries using the ES5 method provide 'computed' bound properties by some special syntax. These properties have their native equivalents, namely getters and setters. However the ES5 method uses getters/setters internally to set up the data binding logic, so it can not work with property accessors.
+
+Proxies intercept every kind of property access and mutation, including getters and setters, so this does not pose a problem for the ES6 method.
+
+Browser support
+
+The big disadvantage of using Proxies is browser support. They are only supported in the most recent browsers and the best parts of the Proxy API are non polyfillable. Also their performance is not optimized yet.
+
+Proxy wrapper
+
+ES6 Proxies can only create a separate "copy" of the original object, but this copy will fail in cases where you try to compare them with ===:
+
+var obj = { a: 1 }
+var proxy = new Proxy(obj, handlers)
+
+obj === proxy // false
+This introduces more complexity when you are accessing nested properties - you will always need to be careful about whether a value you retrieved is the "real one" or just a proxy, otherwise it can lead to obscure bugs when you rely on === comparators.
+
+## How `WeakMap` can help you prevent memory leaks?
+
+The experienced JavaScript programmer will notice that this API could be implemented in JavaScript with two arrays (one for keys, one for values) shared by the four API methods. Such an implementation would have two main inconveniences. The first one is an O(n) search (n being the number of keys in the map). The second one is a memory leak issue. With manually written maps, the array of keys would keep references to key objects, preventing them from being garbage collected. In native WeakMaps, references to key objects are held "weakly", which means that they do not prevent garbage collection in case there would be no other reference to the object.
+
+Because of references being weak, WeakMap keys are not enumerable (i.e. there is no method giving you a list of the keys). If they were, the list would depend on the state of garbage collection, introducing non-determinism. If you want to have a list of keys, you should use a Map.
+
+```js
+const privateData = new WeakMap()
+
+class MyClass {
+    constructor(name, age) {
+        privateData(this, { name, age })
+    }
+
+    getName() {
+        return privateData.get(this).name;
+    }
+
+    getAge() {
+        return privateData.get(this).age;
+    }
+}
+
+export default MyClass
+```
+
+```js
+const myElement = document.getElementById('logo')
+const myWeakmap = new WeakMap()
+
+myWeakmap.set(myElement, {timesClicked: 0})
+
+myElement.addEventListener('click', () => {
+  const logoData = myWeakmap.get(myElement)
+  logoData.timesClicked++
+
+  myWeakmap.set(myElement, logoData)
+}, false)
+```
+
+## Early Binding vs Late Binding
+
+Early Binding
+
+```js
+var sum = function(a, b) {
+  return a + b;
+};
+
+var x = 5, y = 6;
+var sum5n6 = sum.bind(null, x, y);
+
+x = 10;
+y = 5;
+console.log("with Early Binding -->", sum5n6());
+```
+
+Late Binding
+
+```js
+var sum2 = function(p) {
+  return p.x + p.y;
+};
+
+var x = 5, y = 6;
+var n = {x: x, y: y};
+var sumLate = sum2.bind(null, n);
+
+n.x = 10;
+n.y = 5;
+
+console.log("Late Binding -->", sumLate());
+```
+## Explain how JSONP works (and how it's not really Ajax).
+
+Stands for JavaScript Object Notation with Padding
+
+Browsers try to be security conscious. They don’t let your JS talk to just any old server (see Cross Site Scripting). When you make AJAX requests, you can only query your server, not anyone else’s. This is a problem if you want to get data from another server (perhaps see a stream of Tweets). The browsers will not let you make an AJAX call to another server, so you're stuck.
+
+Well, browsers have a caveat. You aren’t allowed to call other servers from your JS, but you are allowed to include a script from another server. You probably already do this with jQuery. Most people include a script tag to get jQuery hosted from Google rather than hosting it themselves. Something like this:
+
+`<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>`
+Notice that the domain is ajax.googleapis.com not your-awesome-site.com. Browsers allow this kind of code sharing, but direct calls to an API from JS.
+
+So way back in 2005 someone had the clever idea to take advantage of this caveat. Instead of calling an API directly (which browsers don’t allow) you can call it via a script tag (which is totally legit).
+
+So how does it work?
+
+Create a function in the global space to handle the JSON returned from the API. It doesn’t have to do much, just enough so you can see what you're getting:
+
+```js
+function myCallbackFunction(data) {
+  console.log(data);
+}
+```
+
+Next, add a script tag to your page which calls the API and passes it an additional parameter. Something like this:
+
+`<script src="http://cool-stuff.com/api.json?callback=myCallbackFunction"></script>`
+Notice the additional parameter? It’s typically called callback, but not always, check the docs for your particular API. Also note the callback parameter’s value. It’s the same as the function we defined earlier. This is crucial! If those names don’t match up you won’t get your data.
+
+An API that’s set up to handle JSONP knows to look for that special parameter. If it’s there, the response isn’t just JSON, but the JSON wrapped (Padded) with the name of the callback. So for us, the API would return:
+
+```js
+myCallbackFunction({'awesome': 'data'});
+```
+
+Since the API returns to a script tag the JS is immediately executed. So myCallbackFunction gets called. We defined this function earlier, so we'll have `{'awesome': 'data'}` logged to the console!
+
+A few things to note:
+
+Generally you don’t write the script tag yourself. You can get jQuery to do that for you :) To make the same call as we did previously you can just use:
+
+```js
+$.ajax({
+  url: 'http://cool-stuff.com/api.json',
+  dataType: 'jsonp',
+  success: function(data) {
+    console.log(data);
+  }
+});
+```
+
+Safety First! There’s a reason browsers don’t like you talking to other servers - you never know what those servers will send back! Use good data validation, even if the data is “safe.”
+
+You can only use JSONP for get requests. You can use normal AJAX to do post and delete and all data manipulations, but you cannot do this with JSONP. The practical reason for this is that HTML tags only ever get information, they can’t do anything else (think image tags, links for style sheets, and script tags). The handy reason is that if you owned the API you almost certainly would not want randoms from the internet updating your data.
+
+## What are Long-Polling, Websockets, Server-Sent Events (SSE) and Comet?
+
+Before you can understand these technologies, you have to understand classic HTTP web traffic first.
+
+### Regular HTTP:
+
+- A client requests a webpage from a server.
+- The server calculates the response
+- The server sends the response to the client.
+
+![alt tag](http://i.stack.imgur.com/TK1ZG.png)
+
+### Ajax Polling:
+
+- A client requests a webpage from a server using regular HTTP (see HTTP above).
+- The requested webpage executes JavaScript which requests a file from the server at regular intervals (e.g. 0.5 seconds).
+- The server calculates each response and sends it back, just like normal HTTP traffic.
+
+![alt tag](http://i.stack.imgur.com/qlMEU.png)
+
+### Ajax Long-Polling:
+
+- A client requests a webpage from a server using regular HTTP (see HTTP above).
+- The requested webpage executes JavaScript which requests a file from the server.
+- The server does not immediately respond with the requested information but waits until there's new information available.
+- When there's new information available, the server responds with the new information.
+- The client receives the new information and immediately sends another request to the server, re-starting the process.
+
+![alt tag](http://i.stack.imgur.com/zLnOU.png)
+
+### HTML5 Server Sent Events (SSE) / EventSource:
+
+- A client requests a webpage from a server using regular HTTP (see HTTP above).
+- The requested webpage executes javascript which opens a connection to the server.
+- The server sends an event to the client when there's new information available.
+- Real-time traffic from server to client, mostly that's what you'll need
+- You'll want to use a server that has an event loop
+- Not possible to connect with a server from another domain
+
+![alt tag](http://i.stack.imgur.com/ziR5h.png)
+
+### HTML5 Websockets:
+
+- A client requests a webpage from a server using regular http (see HTTP above).
+- The requested webpage executes JavaScript which opens a connection with the server.
+- The server and the client can now send each other messages when new data (on either side) is available.
+- Real-time traffic from the server to the client and from the client to the server
+- You'll want to use a server that has an event loop
+- With WebSockets it is possible to connect with a server from another domain.
+- It is also possible to use a third party hosted websocket server, for example Pusher or others. This way you'll only have to implement the client side, which is very easy!
+
+![alt tag](http://i.stack.imgur.com/CgDlc.png)
+
+### Comet:
+
+Comet is a web application model in which a long-held HTTP request allows a web server to push data to a browser, without the browser explicitly requesting it. Comet is an umbrella term, encompassing multiple techniques for achieving this interaction. All these methods rely on features included by default in browsers, such as JavaScript, rather than on non-default plugins. The Comet approach differs from the original model of the web, in which a browser requests a complete web page at a time.
+
+(Streaming, Hidden iframe, XMLHttpRequest, Ajax with long polling, XMLHttpRequest long polling, Script tag long polling)
+
+## What's the difference between host objects and native objects?
+
+Native object is an object in an ECMAScript implementation whose semantics are fully defined by this specification rather than by the host environment.
+
+Standard native objects are defined in the specification. Some native objects are built-in; others may be constructed during the course of execution of an ECMAScript program.
+
+Host object is an object supplied by the host environment to complete the execution environment of ECMAScript.
+
+There are some of them: window, document, location, history, XMLHttpRequest, setTimeout, getElementsByTagName, querySelectorAll, ...
+
+Any object that is not native is a host object.
+
+## What is event loop? What is the difference between call stack and task queue?
+
+### Runtime concepts
+The following sections explain a theoretical model. Modern JavaScript engines implement and optimize heavily the described semantics.
+
+#### Stack
+
+Function calls form a stack of frames.
+
+```js
+function f(b){
+  var a = 12;
+  return a+b+35;
+}
+
+function g(x){
+  var m = 4;
+  return f(m*x);
+}
+
+g(21);
+```
+
+When calling g, a first frame is created containing g arguments and local variables. When g calls f, a second frame is created and pushed on top of the first one containing f arguments and local variables. When f returns, the top frame element is popped out of the stack (leaving only g call frame). When g returns, the stack is empty.
+
+#### Heap
+
+Objects are allocated in a heap which is just a name to denote a large mostly unstructured region of memory.
+
+#### Queue
+
+A JavaScript runtime contains a message queue, which is a list of messages to be processed. A function is associated with each message. When the stack is empty, a message is taken out of the queue and processed. The processing consists of calling the associated function (and thus creating an initial stack frame). The message processing ends when the stack becomes empty again.
+
+### Event loop
+The event loop got its name because of how it's usually implemented, which usually resembles:
+
+```js
+while(queue.waitForMessage()){
+  queue.processNextMessage();
+}
+queue.waitForMessage waits synchronously for a message to arrive if there is none currently.
+```
+
+#### "Run-to-completion"
+
+Each message is processed completely before any other message is processed. This offers some nice properties when reasoning about your program, including the fact that whenever a function runs, it cannot be pre-empted and will run entirely before any other code runs (and can modify data the function manipulates). This differs from C, for instance, where if a function runs in a thread, it can be stopped at any point to run some other code in another thread.
+
+A downside of this model is that if a message takes too long to complete, the web application is unable to process user interactions like click or scroll. The browser mitigates this with the "a script is taking too long to run" dialog. A good practice to follow is to make message processing short and if possible cut down one message into several messages.
+
+#### Adding messages
+
+In web browsers, messages are added any time an event occurs and there is an event listener attached to it. If there is no listener, the event is lost. So a click on an element with a click event handler will add a message--likewise with any other event.
+
+Calling `setTimeout` will add a message to the queue after the time passed as a second argument. If there is no other message in the queue, the message is processed right away; however, if there are messages, the setTimeout message will have to wait for other messages to be processed. For that reason the second argument indicates a minimum time and not a guaranteed time.
+
+#### Zero delays
+
+Zero delay doesn't actually mean the call back will fire-off after zero milliseconds. Calling `setTimeout` with a delay of 0 (zero) milliseconds doesn't execute the callback function after the given interval. The execution depends on the number of awaiting tasks in the queue. In the example below the message ''this is just a message'' will be written to the console before the message in the callback gets processed, because the delay is the minimum time required for the runtime to process the request, but not a guaranteed time.
+
+```js
+(function () {
+
+  console.log('this is the start');
+
+  setTimeout(function cb() {
+    console.log('this is a msg from call back');
+  });
+
+  console.log('this is just a message');
+
+  setTimeout(function cb1() {
+    console.log('this is a msg from call back1');
+  }, 0);
+
+  console.log('this is the end');
+
+})();
+
+// "this is the start"
+// "this is just a message"
+// "this is the end"
+// "this is a msg from call back"
+// "this is a msg from call back1"
+```
+
+#### Several Runtime communicating together
+
+A web worker or a cross-origin iframe has its own stack, heap, and message queue. Two distinct runtimes can only communicate through sending messages via the `postMessage` method. This method adds a message to the other runtime if the latter listens to message events.
+
+### Never blocking
+A very interesting property of the event loop model is that JavaScript, unlike a lot of other languages, never blocks. Handling I/O is typically performed via events and callbacks, so when the application is waiting for an IndexedDB query to return or an XHR request to return, it can still process other things like user input.
+
+Legacy exceptions exist like alert or synchronous XHR, but it is considered as a good practice to avoid them. Beware, exceptions to the exception do exist (but are usually implementation bugs rather than anything else).
+
+### Web Workers
+Using Web Workers enables you to offload an expensive operation to a separate thread of execution, freeing up the main thread to do other things. The worker includes a separate message queue, event loop, and memory space independent from the original thread that instantiated it. Communication between the worker and the main thread is done via message passing, which looks very much like the traditional, evented code-examples.
+
+
+## What is event bubbling and capturing?
+
+![alt tag](https://www.w3.org/TR/DOM-Level-3-Events/images/eventflow.svg)
+
+Event objects are dispatched to an event target. But before dispatch can begin, the event object’s propagation path must first be determined.
+
+The propagation path is an ordered list of current event targets through which the event passes. This propagation path reflects the hierarchical tree structure of the document. The last item in the list is the event target, and the preceding items in the list are referred to as the target’s ancestors, with the immediately preceding item as the target’s parent.
+
+Once the propagation path has been determined, the event object passes through one or more event phases. There are three event phases: capture phase, target phase and bubble phase. Event objects complete these phases as described below. A phase will be skipped if it is not supported, or if the event object’s propagation has been stopped. For example, if the `bubbles` attribute is set to false, the bubble phase will be skipped, and if `stopPropagation()` has been called prior to the dispatch, all phases will be skipped.
+
+- **The capture phase**: The event object propagates through the target’s ancestors from the Window to the target’s parent. This phase is also known as the capturing phase.
+
+- **The target phase**: The event object arrives at the event object’s event target. This phase is also known as the at-target phase. If the event type indicates that the event doesn’t bubble, then the event object will halt after completion of this phase.
+
+- **The bubble phase**: The event object propagates through the target’s ancestors in reverse order, starting with the target’s parent and ending with the Window. This phase is also known as the bubbling phase.
+
+```js
+element1.addEventListener('click', doSomething2, true) // captruring phase
+element2.addEventListener('click', doSomething, false) // bubbling phase
+```
+
+If the user clicks on element2 the following happens:
+
+1. The click event starts in the capturing phase. The event looks if any ancestor element of element2 has a onclick event handler for the capturing phase.
+
+2. The event finds one on element1. `doSomething2()` is executed.
+
+3. The event travels down to the target itself, no more event handlers for the capturing phase are found. The event moves to its bubbling phase and executes `doSomething()`, which is registered to element2 for the bubbling phase.
+
+4. The event travels upwards again and checks if any ancestor element of the target has an event handler for the bubbling phase. This is not the case, so nothing happens.
+
+### Stop Immediate Propagation
+
+If several listeners are attached to the same element for the same event type, they are called in order in which they have been added. If during one such call, `event.stopImmediatePropagation()` is called, no remaining listeners will be called.
+
+
+## What is event delegation?
+
+Event delegation allows you to avoid adding event listeners to specific nodes. Instead, the event listener is added to one parent. That event listener analyzes bubbled events to find a match on child elements.
+
+Event delegation makes use of two features of JavaScript events: *event bubbling* and the *target element*. When an event is triggered on an element, the same event is also triggered on all of that element’s ancestors. This process is known as event bubbling; the event bubbles up from the originating element to the top of the DOM tree. The original target element of any event is stored in a property of the event object - `event.target`. Using event delegation it’s possible to add an event handler to a parent element, wait for an event to bubble up from a child element and easily determine from which element the event originated.
+
+```js
+function handleMenuItemClick(e = window.event) {
+  const target = e.target || e.srcElement
+
+  if (target.tagName.toLowerCase() === 'li') {
+    // do stuff...
+  }
+}
+
+document.getElementById('menu').addEventListener('click', handleMenuItemClick)
+```
+
+Pros:
+
+- There are less event handlers to setup and reside in memory. This is the big one; better performance and less crashing.
+- There’s no need to re-attach handlers after a DOM update. If your page content is generated dynamically you don’t need to add and remove event handlers as elements are loaded or unloaded.
+
+Cons:
+
+- There’s a risk your event management code could become a performance bottleneck, so keep it as lean as possible.
+- Not all events bubble. The `blur`, `focus`, `load` and `unload` events don’t bubble like other events. The blur and focus events can actually be accessed using the capturing phase (in browsers other than IE) instead of the bubbling phase but that’s a story for another day.
+- You need caution when managing some mouse events. If your code is handling the mousemove event you are in serious risk of creating a performance bottleneck because the mousemove event is triggered so often.
+
+
+## Decorators
+
+What the heck are decorators anyway? Well, in Python, decorators provide a very simple syntax for calling higher-order functions. A Python decorator is a function that takes another function, extending the behavior of the latter function without explicitly modifying it. The simplest decorator in Python could look like this:
+
+
+That thing at the very top (@mydecorator) is a decorator and isn’t going to look that different in ES2016 (ES7), so pay attention! :). @ indicates to the parser that we’re using a decorator while mydecorator references a function by that name. Our decorator takes an argument (the function being decorated) and returns the same function with added functionality. Decorators are helpful for anything you want to transparently wrap with extra functionality. These include memoization, enforcing access control and authentication, instrumentation and timing functions, logging, rate-limiting, and the list goes on.
+
+## What are the ways server can push data to the client?
+
+### Comet
+
+Traditionally, the __Comet__ term (coinded in 2006 by Alex Russell) has been referring to both HTTP Streaming and HTTP Polling. But consider that the first implementations of HTTP Streaming go back to 2000, well before the Comet term was coined.
+
+__Comet__ is a set of technology principles/communication patterns that are typically implemented using HTTP long-poll. It enables a server to send data to the browser on demand (i.e. server push). Current comet implementations require some complex Javascript on the client side and support from the server-side (for long-held requests).
+
+#### Http Polling
+Basically AJAX, using XmlHttpRequest.
+
+#### Http Long Polling
+Is still AJAX but the server holds on to the response unless the server has an update, as soon as the server has an update, it sends it and then the client can send another request. Disadvantage is the additional header data that needs to be sent back and forth causing additional overhead.
+
+#### Http Streaming
+Similar to long polling but the server responds with a header with `Transfer Encoding: chunked` and hence we do not need to initiate a new request every time the server sends some data (and hence save the additional header overhead). The drawback here is that we have to "understand" and figure out the structure of the data to distinguish between multiple chunks sent by the server.
+
+#### Java Applet, Flash, Silverlight
+They provide the ability to connect to socket servers over tcp/ip but since they are plugins, developers don't want to depend on them.
+
+--
+There are also some techniques with iframes that are not worth mentioning.
+
+### Not Comet
+Basically, Comet is a term for a set of hacks to eneble server push. There are some new APIs that are not hacks:
+
+#### WebSockets
+
+WebSockets are the new API which tries to address the short comings of above methods in the following manner:
+
+* The advantage of WebSockets over plugins like Java Applets, Flash or Silverlight is that WebSockets are natively built into browsers and does not rely on plugins.
+* The advantage of WebSockets over http streaming is that you don't have to make an effort to "understand" and parse the data received.
+* The advantage of WebSockets over Long Polling is that of elimination of extra headers size & opening and closing of socket connection for request.
+
+#### Server-sent events
+Not fully supported yet
+
+## What are the pros and cons of using Promises instead of callbacks?
+
+It is fair to say promises are just syntactic sugar. Everything you can do with promises you can do with callbacks. In fact, most promise implementations provide ways of converting between the two whenever you want.
+
+The deep reason why promises are often better is that they're more **composeable**, which roughly means that combining multiple promises "just works", while combining multiple callbacks often doesn't. For instance, it's trivial to assign a promise to a variable and attach additional handlers to it later on, or even attach a handler to a large group of promises that gets executed only after all the promises resolve. While you can sort of emulate these things with callbacks, it takes a lot more code, is very hard to do correctly, and the end result is usually far less maintainable.
+
+One of the biggest (and subtlest) ways promises gain their composability is by uniform handling of return values and uncaught exceptions. With callbacks, how an exception gets handled may depend entirely on which of the many nested callbacks threw it, and which of the functions taking callbacks has a try/catch in its implementation. With promises, you know that an exception which escapes one callback function will be caught and passed to the error handler you provided with `.catch()`.
+
+
+How would you get currently focused element?
+```
+var curElement = document.activeElement
+```
