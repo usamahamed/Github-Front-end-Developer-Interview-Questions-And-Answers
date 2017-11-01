@@ -1,18 +1,18 @@
-// Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+ Given an array of integers, return indices of the two numbers such that they add up to a specific target.
 
-// You may assume that each input would have exactly one solution.
+ You may assume that each input would have exactly one solution.
 
-// Example:
-// Given nums = [2, 7, 11, 15], target = 9,
+ Example:
+ Given nums = [2, 7, 11, 15], target = 9,
 
-// Because nums[0] + nums[1] = 2 + 7 = 9,
-// return [0, 1].
-// UPDATE (2016/2/13):
-// The return format had been changed to zero-based indices. Please read the above updated description carefully.
+ Because nums[0] + nums[1] = 2 + 7 = 9,
+ return [0, 1].
+ UPDATE (2016/2/13):
+ The return format had been changed to zero-based indices. Please read the above updated description carefully.
 
-// Hide Company Tags LinkedIn Uber Airbnb Facebook Amazon Microsoft Apple Yahoo Dropbox Bloomberg Yelp Adobe
-// Hide Tags Array Hash Table
-// Hide Similar Problems (M) 3Sum (M) 4Sum (M) Two Sum II - Input array is sorted (E) Two Sum III - Data structure design
+ Hide Company Tags LinkedIn Uber Airbnb Facebook Amazon Microsoft Apple Yahoo Dropbox Bloomberg Yelp Adobe
+ Hide Tags Array Hash Table
+ Hide Similar Problems (M) 3Sum (M) 4Sum (M) Two Sum II - Input array is sorted (E) Two Sum III - Data structure design
 ```
 
 /**
@@ -38,17 +38,17 @@ var twoSum = function(nums, target) {
 
 
 # Same Tree
-
+```
 var isSameTree = function(p, q) {
     if(!p && !q)  return true
     else if ((p && !q) || (!p && q) || p.val !== q.val) return false
     else return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
 };
+```
 
+# Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
 
-// Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
-
-// For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
 
 //     1
 //    / \
@@ -86,5 +86,25 @@ var isSymmetric = function(root) {
     var left = root.left;
     var right = root.right;
     return isSymmetricNode(left, right);
+};
+```
+# Binary Tree Level Order Traversal
+```
+var traversal = function(ret, root, depth) {
+    if(root === null) {
+        return;
+    }
+    if(!Array.isArray(ret[depth])) {
+        ret[depth] = [];
+    }
+    ret[depth].push(root.val);
+    traversal(ret, root.left, depth + 1);
+    traversal(ret, root.right, depth + 1);
+}
+
+var levelOrder = function(root) {
+    var ret = [];
+    traversal(ret, root, 0);
+    return ret;
 };
 ```
