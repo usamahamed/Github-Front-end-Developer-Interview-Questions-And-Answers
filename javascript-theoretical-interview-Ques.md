@@ -557,6 +557,74 @@ function A () {
 
 (Such as aleert (msg)), the function function (alert () () () () () () () () () () () () () () () () () () () () () () () () msg)) quotes ScopeA, which is a circular reference that will cause memory leaks in IE.
 
+# How to implement an EventEmitter
+```
+var util = require ('util');
+var EventEmitter = require ('events');
+functionMyEmitter () {
+    EventEmitter.call (this);
+} // Constructor
+util.inherits (MyEmitter, EventEmitter); // inherited
+var em = new MyEmitter ();
+em.on ('hello', function (data) {
+    console.log ('receive event hello data:', data);
+}); // receive the event and print it to the console
+em.emit ('hello', 'EventEmitter send the message really convenient!');
+```
+# Use node to simulate client-initiated requests
+```
+var http = require ("http");
+var request = http.request ({
+    host: "localhost",
+    port: "8080"
+    path: "/ request",
+    method: "post"
+}, function (res) {
+    res.on ("data", function (chunk) {
+        console.log (chunk.toString ());
+    });
+});
+request.write ("user = zhang & pass = 111");
+request.end ("request end"); // end this request
+```
+# Mark and sweep
+This is the most common form of garbage collection in JavaScript. When a variable enters the execution environment, such as a variable in a function, the garbage collector marks it as an "entry environment", and when the variable leaves the environment (the end of the function) Marked as "leaving the environment".
+
+The garbage collector will mark all the variables stored in memory at run time, then remove the variables in the environment and the variables (closures) that are referenced by the variables in the environment. After these completions, the tag is still Delete the variable
+
+# Reference counting
+In the low version of IE often there will be memory leaks, often because it uses the reference count for garbage collection. The method of referencing the count is to track the number of times each value is used for the record. When a variable is declared and a reference type is assigned to the variable, the number of references to this value is incremented by 1 if the value of the variable becomes another , This is worth the number of references minus 1, when the value of the number of references to 0, indicating that no variables in use, this value can not be accessed, so it can take up space for recycling, so garbage collector will Run the time to clean up the reference number of 0 occupied by the value of space.
+
+
+# What is Etag?
+
+When sending a server request, the browser will first cache outdated judgment. The browser determines whether the cache file expires based on the cache expiration time.
+Scenario 1: If there is no expiration, do not send the request to the server, the direct use of the results in the cache, then we can see in the browser console  200 OK(from cache), this time the situation is full use of the cache, the browser and server There is no interaction.
+
+Scenario 2: If it has expired, send a request to the server, where the request will bring the file modification time set in ①, andEtag
+
+Then, the resource update judgment is made. The server according to the browser over the file to modify the time to determine the browser since the last request, the file is not not modified; according Etagto judge the contents of the file since the last request, there has been no change
+
+Case 1: If the two kinds of conclusions are judged file has not been modified, the server is not sent to the browser index.html's content, and tell it, the document has not been modified, you use your right side of the cache -  304 Not Modified, At this point the browser will be from the local cache to get index.htmlthe content. In this case, the protocol cache is called, and there is a request interaction between the browser and the server.
+Case 2: If you modify the time and the contents of the document to determine any one did not pass, the server will accept the request, after the operation with the ①
+
+# What is the HTTP request message structure?
+
+rfc2616 has been defined:
+
+The first line is the Request-Line including: request method , request URI , protocol version , CRLF
+The first line is followed by a number of row request headers , including general-header , request-header or entity-header , each line ends with CRLF
+There is a CRLF delimited between the request header and the message entity
+According to the actual request may contain a message entity A request message example is as follows:
+
+# HTTP response What is the message structure?
+
+rfc2616 has been defined:
+
+The first line is the status line including: HTTP version, status code, status description , followed by a CRLF
+The first line is followed by a number of rows of response headers , including: generic head, response head, solid head
+The response header and the response entity are separated by a CRLF blank line
+Finally, a possible message entity response message example is as follows:
 ## What is the outer margin overlap? What is the result of the overlap?
 
 　　Answer:
