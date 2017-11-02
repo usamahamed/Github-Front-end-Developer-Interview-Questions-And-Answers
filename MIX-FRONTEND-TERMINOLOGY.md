@@ -2803,3 +2803,62 @@ How would you get currently focused element?
 ```
 var curElement = document.activeElement
 ```
+
+
+# How to optimize site performance
+
+Yahoo Best Practices for Speeding Up Your Web Site :
+
+content aspect
+
+- Reduce HTTP requests: merge files, CSS sprites, inline Image
+- Reduce DNS queries: The browser can not download any files from this host before the DNS query completes. Method: DNS  cache, the distribution of resources to the appropriate number of host names, balanced parallel download and DNS query
+- Avoid redirects: extra intermediate access
+- Make Ajax cacheable
+- Non-essential components are delayed loading
+- Future required components preloaded
+- Reduce the number of DOM elements
+- The resources into different domains: the browser at the same time from a domain to download the limited number of resources, increase the domain can increase the amount of parallel downloads
+- Reduce the number of iframe
+- Do not 404
+
+Server aspects
+
+- Use CDN
+- Add an Expires or Cache-Control header
+- Use Gzip compression for components
+- Configure ETag
+- Flush Buffer Early
+- Ajax uses GET for request
+ - Avoid empty src img tags
+
+Cookie aspects
+
+- Decrease cookie size
+- Do not include a cookie for the domain name of the imported resource
+
+css aspect
+
+- Place the style sheet at the top of the page
+- Do not use CSS expressions
+ - Use not use @import
+- Do not use IE's Filter
+
+Javascript aspects
+
+- Place the script at the bottom of the page
+- Introduce javascript and css from outside
+- Compress javascript and css
+ - Delete unwanted scripts
+- Reduce DOM access
+- Reasonable design of event listener
+- Picture aspect
+
+- Optimize the picture: according to the actual color need to select the color depth, compression
+- Optimize the css wizard
+- Do not stretch the image in HTML
+- Guaranteed favicon.ico small and cacheable
+Mobile aspects
+
+- Guaranteed components less than 25k
+ - Pack Components into a Multipart Document
