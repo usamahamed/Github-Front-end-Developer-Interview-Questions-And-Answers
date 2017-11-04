@@ -231,4 +231,154 @@ export class ExponentialStrengthPipe implements PipeTransform {
 
 Async pipe knows about the lifespan of the component and unscubscribes from the observable if necessary.
 
+#### What is the diffrence between RouterModule.forRoot() vs RouterModule.forChild()? Why is it important?
 
+* forRoot creates a module that contains all the directives, the given routes, and the router service itself.
+* forChild creates a module that contains all the directives and the given routes, but does not include the router service.
+It registers the routers and uses the router service created at the root level.
+* This is important because location is a mutable global property. Having more than one object manipulating the location is not a good idea.
+
+#### How does loadChildren property work?
+
+```ts
+const routes: Routes = [
+  ...,
+  { path: 'edit', loadChildren: 'app/edit/edit.module#EditModule' },
+  ...
+]
+```
+
+* In the above example, loadChildren tells the router to fetch the EditModule bundle assigned to it *when* the user visits '/edit' url. (To be more precise, it will ask the module loader to find and load it.)
+* Router will get the router configuration from edit module.
+* It merges EditModule router configuration with the main application configuration.
+* Activate all the needed components.
+
+#### Do you need a Routing Module? Why/not?
+Yes if the user was expected to navigate between different URLs. The Routing Module interprets the browser's URL as an instruction to load a specific component and its view. The application has to have its main router configured and bootstraped by passing an array of routes to `RouterModule.forRoot()`, and since this returns a module, it has to be added to the `imports` meta property in the main application module.
+
+The RouterModule:
+
+- separates our routing concerns from our feature module
+- provides a module to replace or remove when testing our feature module
+- provides a common place for require routing service providers including guards and resolvers
+- is not concerned with feature module declarations
+
+#### When does a lazy loaded module is loaded?
+
+The `loadChildren` property is used by the Router to map to a bundle and lazy-load it. The router will take our `loadChildren` string and dynamically load in a module, add its routes as child routes to the configuration dynamically and then load the requested route. This will only happen when the route is first requested and the module will be immediately be available for subsequent requests.
+
+Note that lazy-loaded modules should be removed from modules tehy were part of since they will be loaded on demand.
+
+
+#### Below link doesn't work. Why? How do I fix it?
+
+```html
+<div routerLink='product.id'></div>
+```
+
+The routerLink should specify a defined path in the routing configuration and the required path parameter (`product.id`). The code above tries to visit a specific product page, so it should be done using *Link Parameters Array*:
+
+```html
+<div [routerLink]="['/product', product.id]"></div>
+```
+
+The above is correct in the case of having `product/:id` as a path in the application router configuration.
+
+
+#### Can you explain the difference between ActivatedRoute and RouterState?
+
+After the end of each successful navigation lifecycle, the router builds a tree of ActivatedRoute objects that make up the current state of the router. We can access the current RouterState from anywhere in our application using the Router service and the routerState property. 
+
+RouterState is the current state of the router including a tree of the currently activated routes in our application along     convenience methods for traversing the route tree.
+
+#### What is the use case of services?
+
+The main use case of Services is to move duplicated code into a single location, acting like a Singleton. It encourages DRY (Don't Repeat Yourself), which is a principle in Software Engineering, aimed at reducing repitition of information or code in a multi-layered architecture.
+
+Services can serve as a method of interaction between an application and a data store. It also can provide communication channels between directives, as well as any other business logic access.
+
+#### How are the services injected to your application?
+
+There are two ways to inject a service into your application:
+
+- Per Application: Provides the service at an application level
+- Per Component: Provides the service at a component level (and all child components)
+
+Providing a service at an application level or a higher level creates a single instance of that service and shares it with all sub directives. This is useful in the case of sharing properties or state between service holders.
+
+Providing a service for every different component would create an instance for each of the components with separate resources.
+
+Injecting a service can be done by importing the service and specifying it in the `NgModule`'s metadata array preperty `providers`, and inject it into the directive using it via the constructor. To inject a service into another service, annotate the target service class with `@Injectable`.
+
+```ts
+//annotation used for services injecting other services
+@Injectable()
+export class MessageService {
+	//injected service
+	constructor(private errorService: ErrorService){}
+}
+```
+
+#### How do you unit test a service with a dependency?
+[insert answer]
+
+#### Why is it a bad idea to create a new service in a component like the one below?
+
+```ts
+let service = new DataService();
+```
+
+That's a bad idea for several reasons including:
+
+Our component has to know how to create a DataService. If we ever change the DataService constructor, we'll have to find every place we create the service and fix it. Running around patching code is error prone and adds to the test burden.
+
+We create a new service each time we use new. What if the service should cache data and share that cache with others? We couldn't do that.
+
+We're locking the component into a specific implementation of the DataService. It will be hard to switch implementations for different scenarios. Can we operate offline? Will we need different mocked versions under test? Not easy.
+
+
+* What is a structural directive?
+
+
+Structural directives are responsible for HTML layout. They shape or reshape the DOM's structure, typically by adding, removing, or manipulating elements.
+
+
+
+* How do you identify a structural directive in html?
+
+
+By the '*' before the directive name as in `<p *ngIf="true">`
+
+
+* When creating your own structural directives, how would you decide on hiding or removing an element? What would be the advantages or disadvantages of choosing one method rather than the other? 
+
+
+The difference between hiding and removing doesn't matter for a simple paragraph. It does matter when the host element is attached to a resource intensive component. Such a component's behavior continues even when hidden. The component stays attached to its DOM element. It keeps listening to events. Angular keeps checking for changes that could affect data bindings. Whatever the component was doing, it keeps doing.
+
+Although invisible, the component—and all of its descendant components—tie up resources. The performance and memory burden can be substantial, responsiveness can degrade, and the user sees nothing.
+
+On the positive side, showing the element again is quick. The component's previous state is preserved and ready to display. The component doesn't re-initialize—an operation that could be expensive. So hiding and showing is sometimes the right thing to do.
+
+But in the absence of a compelling reason to keep them around, your preference should be to remove DOM elements that the user can't see and recover the unused resources with a structural directive like NgIf .
+
+
+# What pseudo-class selector targets styles in the element that hosts the component?
+:host
+
+Use the :host pseudo-class selector to target styles in the element that hosts the component (as opposed to targeting elements inside the component's template).
+
+# How would you select all the child components' elements?
+
+# How would you select a css class in any ancestor of the component host element, all the way up to the document root?
+:host-context
+
+Sometimes it's useful to apply styles based on some condition outside of a component's view. For example, a CSS theme class could be applied to the document <body> element, and you want to change how your component looks based on that.
+
+Use the :host-context() pseudo-class selector, which works just like the function form of :host(). The :host-context() selector looks for a CSS class in any ancestor of the component host element, up to the document root. The :host-context() selector is useful when combined with another selector.
+
+The following example applies a background-color style to all <h2> elements inside the component, only if some ancestor element has the CSS class theme-light.
+```
+:host-context(.theme-light) h2 {
+  background-color: #eef;
+}
+```
