@@ -108,3 +108,30 @@ var levelOrder = function(root) {
     return ret;
 };
 ```
+
+# First non repeating char
+```
+function firstNonRepeatedCharacter(string) {
+    var first;
+
+    string.split('').some(function (character, index, obj) {
+        if(obj.indexOf(character) === obj.lastIndexOf(character)) {
+            first = character;
+            return true;
+        }
+
+        return false;
+    });
+
+    return first;
+}
+```
+
+# Generate random number between two numbers in JavaScript
+
+```
+function randomIntFromInterval(min,max)
+{
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+```
