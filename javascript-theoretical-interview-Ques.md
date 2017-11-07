@@ -798,6 +798,57 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit....
 
 - https://davidwalsh.name/optimizing-structure-print-css
 
+
+# What is the relationship between prototype and __proto__ : js __proto__ prototype and the difference between the relationship?
+
+__proto __ (Implicit Prototype) and prototype (Explicit Prototype)
+作者：苏墨橘
+链接：https://www.zhihu.com/question/34183746/answer/59043879
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+What is it Explicit prototype explicit prototype property:After each function is created, it will have a property named prototype that points to the prototype object of the function. Note : The exception is the function built using the Function.prototype.bind method, which has no prototype property. (thank@ Chen Yu Lu Students answer let me know this)NOTE Function objects created using Function.prototype.bind do not have a prototype property or the [[Code]], [[FormalParameters]], and [[Scope]] internal properties. ----- ECMAScript Language SpecificationImplicit prototype link implicit prototype link:Any object in JavaScript has a built-in property [[prototype]]. There is no standard way to access this built-in property before ES5, but most browsers support access via __proto__. The Get method Object.getPrototypeOf () for this built-in attribute is available in ES5                      Note: The Object.prototype object is an exception with a __proto__ value of nullThe relationship between the two:An implicit prototype points to the prototype of the constructor that created this objectWhat is the role? The role of explicit prototyping: used to achieve prototype-based inheritance and attribute sharing.ECMAScript does not use classes such as those in C ++, Smalltalk, or Java. Instead objects may be created in various ways including via a literal notation or via constructors which create objects and then execute code that initialize all or part of them by assigning initial values each constructor is a function that has a property named "prototype" that is used to implement prototype-based inheritance and shared properties .Objects are created by using constructors in new expressions; for example, new Date (2009,11) creates a new Date object. ---- ECMAScript Language SpecificationThe role of implicit prototyping: Constitute a prototype chain, also used to achieve prototype-based inheritance. For example, when we access the x property in obj this object, if it is not found in obj, it looks in __proto__ order.Every object created by a constructor has an implicit reference (called the object's prototype) to the value of its constructor's "prototype" ---- ECMAScript Language Specification3. __proto__ pointing __proto__ point in the end how to judge it? According to ECMA definition 'to the value of its constructor's' prototype '' - an explicit prototype of the function that created this object. So the key point is to find the constructor that created this object. Now let's take a look at the way objects are created in JS. There are three ways to look at the past: (1) how the object literals (2) new 3) Object.create () in ES5 But I think there is essentially only one way to do this, which is to create it with new. Why do you say that, first of all, the literal approach is a syntactic sugar that makes it easier for developers to create objects, essentially var o = new Object (); o.xx = xx; o.yy = yy; Object.create (), which is a new method in ES5, before this is called prototype inheritance,Douglas wrote an article in 2006 titled Prototypal Inheritance In JavaScript. In this article, he introduced a way to achieve inheritance, this method does not use the strict constructor. His idea is that with the help of a prototype, you can create a new object based on an existing object, and you can create a custom type for that purpose. To do this, he gives the following function:         function object(o){
+    function F(){}
+    F.prototype = o;
+    return new F()
+}
+ ----- "JavaScript Advanced Programming" P169So from the implementation of the code return new F () we can see that this is still created by new. The difference is that the object created by Object.create () does not have a constructor, see here you are not asking, there is no constructor how do I know where its __proto__ point, in fact, here it says there is no constructor is Refers to the constructor that we can not access outside of the Object.create () function, however it is present in the internal implementation of the function, which briefly exists for a while. Assuming we are inside the function now, we can see that the constructor of the object is F, now
+```
+var f = new F(); 
+//于是有
+f.__proto__ === F.prototype //true
+//又因为
+F.prototype === o;//true
+//所以
+f.__proto__ === o;
+```
+So the object created by Object.create (o) has its implicit prototype pointing to o. Well, the analysis of the way to create an object is over, and now you should be able to determine an object __proto__ point to whom.Well, let's take a look at some more puzzling examples to consolidate. Implicit prototype of the constructor's display prototype:Built-in objects: such as Array (), Array.prototype .__ What does proto__ point to? Array.prototype is also an object, the object is created by the Object () constructor Array.prototype .__ proto__ === Object.prototype / / true, or you can understand that all the built-in objects are Object () To create it.Custom object   1. By default:function Foo(){}
+var foo = new Foo()
+Foo.prototype.__proto__ === Object.prototype //true 理由同上
+  2. Other cases: (1) function Bar(){}
+//这时我们想让Foo继承Bar
+Foo.prototype = new Bar()
+ Foo.prototype.__proto__ === Bar.prototype //true
+(2)//我们不想让Foo继承谁，但是我们要自己重新定义Foo.prototype
+Foo.prototype = {
+  a:10,
+  b:-10
+}
+//这种方式就是用了对象字面量的方式来创建一个对象，根据前文所述 
+Foo.prototype.__proto__ === Object.prototype
+Note : Both of these are equivalent to completely overriding Foo.prototype, so the Foo.prototype.constructor is also changed. As a result, the constructor property is also disconnected from the original constructor Foo (). Implicit prototype of constructor Since it is a constructor then it is an instance of Function (), so it points to Function.prototype as Object .__ proto__ === Function.prototype4 instanceof instanceof operator's internal implementation mechanism and implicit prototype, explicit prototype has a direct relationship. The lvalue of instanceof is generally an object, the right value is generally a constructor, used to determine whether the lvalue is an instance of the right value. Its internal implementation principle is this://设 L instanceof R 
+//通过判断
+ L.__proto__.__proto__ ..... === R.prototype ？
+//最终返回true or false
+That is, the __proto__ along L is always looking for the end of the prototype chain until it equals R.prototype. Know this, you know why the following strange expressions get the corresponding value Function instanceof Object // true 
+```
+Object instanceof Function // true 
+ Function instanceof Function //true
+ Object instanceof Object // true
+ Number instanceof Number //false
+ ```
+
+
 ### What are some of the "gotchas" for writing efficient CSS?
 
 Firstly, understand that browsers match selectors from rightmost (key selector) to left. Browsers filter out elements in the DOM according to the key selector, and traverse up its parent elements to determine matches. The shorter the length of the selector chain, the faster the browser can determine if that element matches the selector. Hence avoid key selectors that are tag and universal selectors. They match a large numbers of elements and browsers will have to do more work in determining if the parents do match.
