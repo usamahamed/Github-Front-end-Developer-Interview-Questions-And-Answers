@@ -458,3 +458,86 @@ Easy to team development and maintenance
 　　W3C gave us a very good standard, in the team we all follow this standard, you can reduce a lot of different things, easy to develop and maintain, improve development efficiency, and even achieve modular development .
   
   
+# The principle of the front-end routing
+What is routing? Simply put, the route is based on different url address display different content or page
+scenes to be used? Front-end routing is more used in a single page application, which is SPA, because single-page applications are basically front and back ends of the separation, the back end naturally will not provide routing to the front end.
+The front-end routing and back-end routing technology in the realization of different, but the principle is the same. Before the appearance of HTML5 history API, the front-end routing is achieved through the hash, hash compatible with the lower version of the browser.
+Two ways to implement front-end routing 
+HTML5 History Two new APIs: history.pushStateAnd history.replaceState, both APIs will manipulate the browser's history without causing the page to refresh.
+Hash is seen in the url, #and we need an event ( hashchange) that fires as a function of listening hash changes . We used window.locationwhen dealing with change will not re-hash of rendering the page, but as a new page to the history records, so we jump page can register in hashchange ajax event to change the content of the page.
+Advantages
+Compared with the performance and user experience levels, the back-end routing must send a request to the server each time a new page is accessed, and then the server reacts to the request. This process is bound to be delayed. The front-end routing in the visit to a new page when it is just a change of path only, without the network delay, there will be a considerable improvement for the user experience.
+See more here
+Disadvantages
+Using the browser forward, back button when the request will be re-sent, there is no reasonable use of the cache.
+
+
+
+# Restful API is what
+Restful means presentation state transition.
+"Presentation layer" actually refers to the "presentation layer" of Resources, and the "resource" is a concrete manifestation of its "Representation."
+The so-called "resource" is an entity on the network, or a specific information on the Internet. It can be a paragraph of text, a picture, a song, a service, in short, is a concrete reality, each URI represents a resource.
+If the client wants to manipulate the server, there must be some means for the server side to "state transfer" (State Transfer). And this transformation is based on the performance of the above, so is the "presentation state transition."
+Restful is the client and server, some of the presentation of such resources
+The client through the four HTTP verbs, the server-side resources to operate, to achieve the "presentation state transition"
+Restful API is consistent with Restful architecture API design.
+Restful API some specific practices:
+API should be deployed as far as possible under the private domain name. If you determine the API is very simple, there will be no further expansion, it can be considered on the main domain name.
+The API version number should be put into the URL.
+The specific type of operation for a resource is represented by the HTTP verb
+If the number of records is large, the server can not return them to the user. The API should provide parameters to filter the returned results
+If the status code is 4xx, you should return an error message to the user. In general, the error returned as the key information 
+.....
+
+Homology and cross-domain
+
+# What is the same origin strategy? 
+Limit how documents or scripts loaded from one source interact with resources from another source. 
+A source refers to the combination of host name, protocol, and port number, which must be the same
+Several ways to communicate across domains
+JSONP
+Hash
+postMessage
+WebSocket
+CORS
+
+# What is the difference between git and svn?
+
+SVN is a centralized version control system, the repository is concentrated on the central server, and work, are using their own computers, so first of all from the central server where the latest version, and then work, finish After that, you need to push the job done by yourself to the central server. Centralized version control system is necessary to work in the network, if you can LAN, bandwidth, fast enough, if the Internet, if the network speed, then wonder. 
+
+Git is a distributed version control system, so it does not have a central server, and everyone's computer is a complete repository so that you do not need to be networked while you work because the versions are all on your own computer. Since each person's computer has a complete repository, how many people collaborate? For example, if you have changed file A on your computer and others have changed file A on your computer, you will be able to see each other's changes just by pushing their changes to each other.
+
+# Say a few http protocol status code?
+
+200, 201, 302, 304, 400, 404, 500 
+
+200: The request succeeds 
+201: The request succeeds and the server creates a new resource 
+302: The server currently responds to the request from a webpage in a different location, but the requestor should continue to use the original location Respond to future requests. 
+304: The requested web page has not been modified since the last request. When the server returns this response, it does not return the page content. 
+400: The server does not understand the syntax of the request. 
+404: The requested resource (webpage, etc.) does not exist 
+500: Internal server error
+
+# How to manage the project during development? Gulp?
+
+I developed, the use of front-end workflow management tools such as gulp management project. gulp is a new generation of front-end project building tools that you can use gulp and its plugins to compile your project code (less, sass), compress your js and css code, even compress your images, merge files, Compressed files, grammar check, monitor file changes, test, convert binary, convert images and a series of functions. Gulp only a small amount of API, so very easy to learn. Achieve good project management.
+
+# commonjs? Requirejs? AMD | CMD | UMD?
+
+1.CommonJS is to develop a specification for the performance of JS, NodeJS is the realization of this specification, webpack is also written in the form of CommonJS. Because js does not have the functionality of a module, CommonJS came into being. But it can not be run in the browser. Modules defined by CommonJS are divided into: {module} {{exports} {module}} 
+
+2.RequireJS is a JavaScript module loader. RequireJS has two main methods: define () and require (). Both of these methods basically have the same declaration and both know how to load the dependencies and then execute a callback function. Unlike require (), define () is used to store code as a named module. Therefore, the callback function of define () needs to have a return value as this module definition. These similarly defined modules are called Asynchronous Module Definition (Asynchronous Module Definition). 
+
+3.AMD is RequireJS in the promotion process of standardized definition of the module output AMD asynchronous loading module. Its modules support various types of modules such as Object Function Constructor String JSON. Applicable to the definition of the definition of AMD module for the define method. 
+
+4. CMD is the normalized output of SeaJS's definition of the module during the rollout 
+. Differences between AMD and CDM: 
+(1) For the dependent modules, AMD executes ahead of time (as if it can now be deferred) and CMD is deferred. 
+(2) AMD respected rely on the front, CMD respected rely on the nearest. 
+(3) AMD respected multiplexing interface, CMD respected single-use interface. 
+(4) differences in writing norms.
+
+5.umd is a blend of AMD and CommonJS. 
+The first principle of AMD browser is to develop asynchronous loading module. 
+The CommonJS module evolves on a server-first principle with synchronous loading and its unwrapped modules. This forced people to come up with another more universal model UMD (Universal Module Definition), hoping to solve cross-platform solutions. UMD first to determine whether to support the Node.js module (Export) exists, there is the use of Node.js module mode.
