@@ -398,7 +398,7 @@ To prevent unnecessary security problems
 　　In the same quality, WebP format images are 40% smaller than JPEG images.
 
 　　Apng : full name is "Animated Portable Network Graphics" , PNG bitmap animation expansion, you can achieve png format dynamic picture effects. 04 was born, but has not been the major browser manufacturers support, until recently got iOS safari 8 support, is expected to replace the GIF as the next generation dynamic map standard.
-# large number of pictures on the page (large electricity business website), loading is very slow, what methods do you have to optimize the loading of these pictures, give users a better experience.
+## large number of pictures on the page (large electricity business website), loading is very slow, what methods do you have to optimize the loading of these pictures, give users a better experience.
 
 Image lazy loading, in the page can not add a visible area of ​​a scroll bar event to determine the location of the picture and the top of the browser and the distance between the page, if the former is less than the latter, the priority load.
 If you are using slides, albums, etc., you can use the image preload technology, the current display of the previous picture and a priority download.
@@ -416,7 +416,7 @@ The screen reader (if the visitor has a visually impaired) will "read" your page
 
 PDA, mobile phones and other devices may not be the same as the ordinary computer's browser to render the same page (usually because these devices support CSS is weak)
 
-### Talk about the front end of the point of doing SEO need to consider what?
+## Talk about the front end of the point of doing SEO need to consider what?
 
 Learn how search engines crawl web pages and how to index web pages
 　　You need to know the basic working principle of some search engines, the difference between the various search engines, search robot (SE robot or web crawler) how to work, how to search engine search results sort.
@@ -458,7 +458,7 @@ Easy to team development and maintenance
 　　W3C gave us a very good standard, in the team we all follow this standard, you can reduce a lot of different things, easy to develop and maintain, improve development efficiency, and even achieve modular development .
   
   
-# The principle of the front-end routing
+## The principle of the front-end routing
 What is routing? Simply put, the route is based on different url address display different content or page
 scenes to be used? Front-end routing is more used in a single page application, which is SPA, because single-page applications are basically front and back ends of the separation, the back end naturally will not provide routing to the front end.
 The front-end routing and back-end routing technology in the realization of different, but the principle is the same. Before the appearance of HTML5 history API, the front-end routing is achieved through the hash, hash compatible with the lower version of the browser.
@@ -473,7 +473,7 @@ Using the browser forward, back button when the request will be re-sent, there i
 
 
 
-# Restful API is what
+## Restful API is what
 Restful means presentation state transition.
 "Presentation layer" actually refers to the "presentation layer" of Resources, and the "resource" is a concrete manifestation of its "Representation."
 The so-called "resource" is an entity on the network, or a specific information on the Internet. It can be a paragraph of text, a picture, a song, a service, in short, is a concrete reality, each URI represents a resource.
@@ -491,7 +491,7 @@ If the status code is 4xx, you should return an error message to the user. In ge
 
 Homology and cross-domain
 
-# What is the same origin strategy? 
+## What is the same origin strategy? 
 Limit how documents or scripts loaded from one source interact with resources from another source. 
 A source refers to the combination of host name, protocol, and port number, which must be the same
 Several ways to communicate across domains
@@ -501,13 +501,13 @@ postMessage
 WebSocket
 CORS
 
-# What is the difference between git and svn?
+## What is the difference between git and svn?
 
 SVN is a centralized version control system, the repository is concentrated on the central server, and work, are using their own computers, so first of all from the central server where the latest version, and then work, finish After that, you need to push the job done by yourself to the central server. Centralized version control system is necessary to work in the network, if you can LAN, bandwidth, fast enough, if the Internet, if the network speed, then wonder. 
 
 Git is a distributed version control system, so it does not have a central server, and everyone's computer is a complete repository so that you do not need to be networked while you work because the versions are all on your own computer. Since each person's computer has a complete repository, how many people collaborate? For example, if you have changed file A on your computer and others have changed file A on your computer, you will be able to see each other's changes just by pushing their changes to each other.
 
-# Say a few http protocol status code?
+## Say a few http protocol status code?
 
 200, 201, 302, 304, 400, 404, 500 
 
@@ -519,11 +519,11 @@ Git is a distributed version control system, so it does not have a central serve
 404: The requested resource (webpage, etc.) does not exist 
 500: Internal server error
 
-# How to manage the project during development? Gulp?
+## How to manage the project during development? Gulp?
 
 I developed, the use of front-end workflow management tools such as gulp management project. gulp is a new generation of front-end project building tools that you can use gulp and its plugins to compile your project code (less, sass), compress your js and css code, even compress your images, merge files, Compressed files, grammar check, monitor file changes, test, convert binary, convert images and a series of functions. Gulp only a small amount of API, so very easy to learn. Achieve good project management.
 
-# commonjs? Requirejs? AMD | CMD | UMD?
+## commonjs? Requirejs? AMD | CMD | UMD?
 
 1.CommonJS is to develop a specification for the performance of JS, NodeJS is the realization of this specification, webpack is also written in the form of CommonJS. Because js does not have the functionality of a module, CommonJS came into being. But it can not be run in the browser. Modules defined by CommonJS are divided into: {module} {{exports} {module}} 
 
