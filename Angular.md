@@ -804,7 +804,9 @@ A: Route Guards
 
 **How would you insert an embedded view from a prepared TemplateRef?**
 
-PA: `viewContainerRef.createEmbeddedView(templateRef);
+PA: `
+viewContainerRef.createEmbeddedView(templateRef);
+`
 
 ## Testing Questions
 
@@ -833,7 +835,41 @@ A: propagates changes to the DOM by running Angular change detection.
 
 A: To verify a particular value was returned or a method was called, for example when calling a service.
 
-
+# How you build an angular app for production?
+- Compile our application (including templates) to TypeScript with ngc.
+- Perform tree-shaking with rollup (this way we will get at least as small bundle as above).
+- Transpile the bundle to ES5.
+- Minify the bundle.
+- Gzip it!
+`
+http://blog.mgechev.com/2016/06/26/tree-shaking-angular2-production-build-rollup-javascript/
 `
 
+# How would you cache an observable data?
+
+http://www.syntaxsuccess.com/viewarticle/caching-with-rxjs-observables-in-angular-2.0
+
+
+# What goes in CoreModule?
+
+Your CoreModule contains code that will be used to instantiate your app and load some core functionality. 
+
+The clearest and most important use of the CoreModule is the place to put your global/HTTP services. The idea is to make sure only one instance of those services will be created across the entire app. The CoreModule, by convention, is only included in your entire app once in AppModule (only in the "import" property of the "@NgModule()" decorator inside your main app.module.ts, not in any other module's "import") and this will ensure services inside it will be only created once in the entire app. This is especially important if you intend to lazy-load your feature modules. Since lazy-loaded modules are loaded on demand (eg when you access the route using the lazy-loaded feature), you could end up creating new instances of supposedly singleton services if you don't put them in CoreModule.
+
+Important single use components/classes can also go in the CoreModule. Good candidates are global components that go in your main AppComponent. For example, if your app has one global header component, you can add the code for HeaderComponent in CoreModule (and then put the HeaderComponent class in the "exports" property of CoreModule's "@NgModule()" decorator so AppModule which imports CoreModule can use it). This allows you to keep this global component in one spot and make sure there's only have one copy of it across the app.
+
+The CoreModule should also be used to export any third party module that is required in the AppModule. The idea is to keep AppModule as lean as possible. Examples are BrowserAnimationsModule (as of time of this writing, this should only be imported once throughout the whole app), Angulartics2Module.
+
+# What goes in SharedModule?
+
+You SharedModule similarly contains code that will be used across your app and Feature Modules. But the difference is that you will import this SharedModule into the specific Feature Modules as needed. You DO NOT import the SharedModule into your main AppModule or CoreModule. 
+
+Common templates components should also go in the SharedModule. An example would be a global button component, eg ButtonComponent. These template components should be "dumb components" in that they should not expect or interact with any specific form of data. You should define a template, style, an "@Output()" event property, and maybe a "@Input()" string property for text inside the button so you can pass in whatever event you want to fire when a user clicks the button. Now all your buttons can look uniform across the app! Of course, this is an architectural decision left up to your discretion. It will make for easier unit testing and separation-of-concerns to follow the pattern though.
+
+Commonly used pipes (ie filters) and directives should go in your SharedModule, too. Prime examples would be custom string/date filters. 
+
+
+# Can you explain the difference between ActivatedRoute and RouterState?
+RouterState is a tree of activated routes. Every node in this tree knows about the "consumed" URL segments, the extracted parameters, and the resolved data.
+https://angular.io/api/router/RouterState
 
