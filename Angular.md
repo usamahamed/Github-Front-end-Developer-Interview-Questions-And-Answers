@@ -873,3 +873,103 @@ Commonly used pipes (ie filters) and directives should go in your SharedModule, 
 RouterState is a tree of activated routes. Every node in this tree knows about the "consumed" URL segments, the extracted parameters, and the resolved data.
 https://angular.io/api/router/RouterState
 
+# List down the advantages and disadvantages associated with Angular2?
+
+AngularJs 2 Advantages:
+
+- Get Rid of ‘$digest already in progress when calling $scope.$apply()’ Exception: In Angularjs 1.x, there are multiple times, developer get the exception ‘’ $digest already in progress when calling $scope.$apply()’. The  reason is, Angular 1.x  did not support digest cycle finished event,  because such event might trigger further events as well as changes which can trigger an infinite loop for  the current digest cycle. Developer used to make very distinctive reasoning in order to decide when to call $scope.apply or $scope.digest, which was not always very simple .Moreover, developer needs to use $timeout event to force Angular finish event to end the current digest cycle.  In Angular 2.0 Zone has made a revolutionary change in case of change detection and  zones mechanism  is capable of deciding whether to end digest cycle or not. Therefore, one of the major advantages of Angular 2.0 is change detection with Zone mechanism.
+Improved Performance: Another significant disadvantages of Angularjs 1.x was its poor performance, In case of ng-repeat the performance issue was really a blocking issue. However in Angular 2.0, the change detection mechanism does not travel the entire DOM tree to detect a change, rather its only travel a part of it, therefore, the performance has been improved significantly.
+- Improved modularity & Dependency Injection: Angular modules in Angular 1.x are mostly architecture to group a number of related functions and then used as container for dependency injection containers. However, in 2.0 modular development and component isolation has made it more easier to instantiate a component and used it in its scope. Inheritance has been introduced in component isolation, therefore, a child service can be injected while it will inherits all the services of its parent. Child injectable component or service is also capable of overriding their parent’s functionality.
+- This is more friendly for mobile development and server side rendering.
+
+* AngularJs 2 Downside/Disadvantages:
+
+- Those who are not familiar with typescript would take longer time to learn.
+- Most of the component need to be developed as the online community is still at the beginning stage.
+
+http://www.webdevelopmenthelp.net/2016/12/angularjs2-interview-questions.html
+
+# How to make APIs session less
+If we think about the meaning of authentication, it seems that it is all about a client identifying itself to the server. After client identification is done, the server can remember the client each time the request comes from the client. There are two common approaches to authentication mechanisms: one of them is called "Session Cookie Based" and the other one is "Token Based".
+
+In this article, I want to focus on how to deal with automatic re-authentication of each HTTP and HTTPS requests.
+
+What Does "Session Cookie Based Authentication" Mean?
+In today's world, especially for corporate businesses, the most common usage of authentication is the session-based approach. In the session-based approcah, a session id—which is a kind of server generated token—is generated and stored in a cookie within the JSESSIONID paramter. This means that the server stores the session key in itself so when the server reboots or requests are redirected to another server by load balancers, your "state" of session key becomes useless.
+
+What Does "Stateless Authentication" Mean?
+Whenever you are talking about REST API's , API keys are mentioned too. Basically, they involve sending custom tokens or custom keys within the HTTP Request header. There are several approaches such as OAUTH1, OAUTH2, Basic Authentication, etc. for implementing stateless authentication and today we will be focus on "Server Signed Token" approach that may be life-saving for your implementations.
+
+Server Signed Token Approach
+First of all, it is easy to imagine that, in this approach; if server gets a request from the client, the client should send a token and the server should check and sign it before giving any response to the client.
+
+With "Server Signed Tokens" a user identification data is shared with the server for authentication and when the server authenticates the user, it gives a hash key which is called a "token" to the client. After this step, the client can use this token to ask for any request to the server so the server should sign and approve that the token is valid for request.
+
+Let's get into the details of the implementation of this approach.
+
+The first step is authentication. In the authentication step, the client sends its user-specific identification data to the server and if this data is correct, the server response is a token to the client with HTTP 200 OK. If the data is incorrect, the server response is an HTTP 403 Forbidden.
+
+# If REST applications are supposed to be stateless, how do you manage sessions?
+The fundamental explanation is:
+
+No client session state on the server.
+By stateless it means that the server does not store any state about the client session on the server side.
+
+The client session is stored on the client. The server is stateless means that every server can service any client at any time, there is no session affinity or sticky sessions. The relevant session information is stored on the client and passed to the server as needed.
+
+That does not preclude other services that the web server talks to from maintaining state about business objects such as shopping carts, just not about the client's current application/session state.
+
+The client's application state should never be stored on the server, but passed around from the client to every place that needs it.
+
+That is where the ST in REST comes from, State Transfer. You transfer the state around instead of having the server store it. This is the only way to scale to millions of concurrent users. If for no other reason than because millions of sessions is millions of sessions.
+
+The load of session management is amortized across all the clients, the clients store their session state and the servers can service many orders of magnitude or more clients in a stateless fashion.
+
+Even for a service that you think will only need in the 10's of thousands of concurrent users, you still should make your service stateless. Tens of thousands is still tens of thousands and there will be time and space cost associated with it.
+
+Stateless is how the HTTP protocol and the web in general was designed to operate and is an overall simpler implementation and you have a single code path instead of a bunch of server side logic to maintain a bunch of session state.
+
+There are some very basic implementation principles:
+
+These are principles not implementations, how you meet these principles may vary.
+
+In summary, the five key principles are:
+
+Give every “thing” an ID
+Link things together
+Use standard methods
+Resources with multiple representations
+Communicate statelessly
+There is nothing about authentication or authorization in the REST dissertation.
+
+Because there is nothing different from authenticating a request that is RESTful from one that is not. Authentication is irrelevant to the RESTful discussion.
+
+Explaining how to create a stateless application for your particular requirements, is too-broad for StackOverflow.
+
+Implementing Authentication and Authorization as it pertains to REST is even more so too-broad and various approaches to implementations are explained in great detail on the internet in general.
+
+Comments asking for help/info on this will/should just be flagged as Not Constructive.
+
+Statelessness means that every HTTP request happens in complete isolation. When the client makes an HTTP request, it includes all information necessary for the server to fulfill that request. The server never relies on information from previous requests. If that information was important, the client would have sent it again in this request. Statelessness also brings new features. It’s easier to distribute a stateless application across load-balanced servers. A stateless application is also easy to cache.
+Stateless means the state of the service doesn’t persist between subsequent requests and response. Each request carries its own user credentials and is individually authenticated. But in stateful each request is known from any prior request. All stateful requests are session-oriented i.e. each request need to know and retain changes made in previous requests.
+
+Banking application is an example of stateful application. Where user first login then make transaction and logs out. If after logout user will try to make the transaction, he will not be able to do so.
+
+Yes, http protocol is essentially a stateless protocol but to make it stateful we make us of HTTP cookies. So, is SOAP by default. But it can be make stateful likewise, depends upon framework you are using.
+
+HTTP is stateless but still we can maintain session in our java application by using different session tracking mechanism.
+
+Yes, We can also maintain session in webservice whether it is REST or SOAP. It can be implemented by using any third party library or you can implement by our own.
+I see that the basic issue here is mixing up Session with State. And while REST specifies that you should NOT store the State on the server, nothing prevents you from storing a user Session.
+
+Managing the State on the server means that your server knows exactly what the client is doing (what page they're viewing in which section of the application). And this is what you shouldn't need to do.
+
+I agree with the other people saying that you should keep the session storage to a minimum size; and while that's common sense, it's actually also dependent on the application. So, in short, you can still keep a session with cached data to handle the requests with less load on the server, and manage the authentication by providing a temporary authentication/access token for the client to use. Whenever the session/token is expired, generate a new one and ask the client to use it.
+
+Someone might argue that the client should better generate the token. I say it works both ways, and it would depend on the application, and who's going to work with the API.
+
+Also keeping some sensitive session data on the server should be the right way to do. You cannot trust the client to keep their shopping cart that (for example) contains a field named "isFreeGift". Such information should be kept on the server.
+
+The video link provided by Santanu Dey in his answer is helpful. Watch it if you haven't.
+
+Just a side note: It seems all the answers already given seem to disregard the fact that some operations could cause a heavy load on the server. That's relevant in terms of power consumption, hardware consumption, and cost (for servers rented by CPU cycle). A good developer shouldn't be lazy in optimizing their application, even if the operation can be done very quickly on a modern CPU on some rented server for which they don't pay its electricity and maintenance bill.
