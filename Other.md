@@ -541,3 +541,124 @@ I developed, the use of front-end workflow management tools such as gulp managem
 5.umd is a blend of AMD and CommonJS. 
 The first principle of AMD browser is to develop asynchronous loading module. 
 The CommonJS module evolves on a server-first principle with synchronous loading and its unwrapped modules. This forced people to come up with another more universal model UMD (Universal Module Definition), hoping to solve cross-platform solutions. UMD first to determine whether to support the Node.js module (Export) exists, there is the use of Node.js module mode.
+
+
+## What is Node? and Why to use it
+
+According to Nodejs.org, Nodejs is a JavaScript runtime or platform which has been built on Chrome v8’s JavaScript engine. This has become the most fast growing and popular platform for building fast and scalable network applications. With the command ‘node’ it starts the google chrome v8 engine and that enables the network to be accessible.
+
+Therefore, it is possible to access the file in the machine or to listen to the network traffic which is not possible using generic JavaScript. Therefore, any action which is possible to perform using ruby on rails or php, now it is possible to perform using JavaScript using Nodejs. Due to the extensively fast growing community and NPM, Nodejs is a very popular open source and cross platform application in order to develop server side and networking applications.
+NodeJS has enable a whole new set of opportunities to JavaScript applications. The main key features for Node.js are as following:
+
+Event driven application
+Non-blocking I/O Model
+Web applications are more lightweight and efficient.
+Public package repository, npm.
+Asynchronous application development
+Applications are single threaded.
+High Performance
+Single threaded but easily scalable
+
+## What is the area of problem Node addresses
+
+Key areas of problem Node addresses:
+
+Slow web servers due to synchronous I/O.
+Multithreaded programming bottlenecks.
+Scaling.
+Package management and deployment.
+## Why Node uses Google V8 Engine
+
+Google V8 is Chrome runtime engine which converts JavaScript code into native machine code which in turn provides a fast running application.
+
+## Can we use other engines than V8
+
+Yes. Microsoft Chakra is another JavaScript engine which can be used with Node.js. It’s not officially declared yet.
+
+## If Node is single threaded then how it handles concurrency
+
+Node provides a single thread to programmers so that code can be written easily and without bottleneck. Node internally uses multiple POSIX threads for various I/O operations such as File, DNS, Network calls etc.
+
+When Node gets I/O request it creates or uses a thread to perform that I/O operation and once the operation is done, it pushes the result to the event queue. On each such event, event loop runs and checks the queue and if the execution stack of Node is empty then it adds the queue result to execution stack.
+
+This is how Node manages concurrency.
+
+## Explain event loop
+
+As said, Node.js is single threaded but it supports concurrency using events and callbacks. The event loop is a component which checks event queue on a periodic basis and pushes the result in execution stack if the stack is empty.
+
+## What is callback hell
+
+The asynchronous function requires callbacks as a return parameter. When multiple asynchronous functions are chained together then callback hell situation comes up. Consider the example code below.
+
+callback hell
+
+This situation is referred to as “callback hell” situation.
+
+Which is your preferred way to write asynchronous code in Node
+
+Here is a list of methods I generally use to avoid callback hell and write asynchronous code.
+
+Using Async module.
+Using promises.
+Using function decomposition.
+Using async/await.
+I personally prefer Async npm module.
+
+## What is stream and explain types of streams
+
+Streams are a collection of data that might not be available all at once and don’t have to fit in memory. Streams provide chunks of data in a continuous manner. It is useful to read a large set of data and process it.
+
+There is 4 fundamental type of streams:
+
+Readable.
+Writeable.
+Duplex.
+Transform.
+Readable streams as the name suggest used in reading a large chunk of data from a source. Writable streams are used in writing a large chunk of data to the destination.
+
+Duplex streams are both readable and writable ( Eg socket). Transform stream is the duplex stream which is used in modifying the data (eg zip creation).
+
+## Explain child processes in Node
+
+Child process module enables us to access operating system functionaries. Scalability is baked into Node and child processes are the key factors to scale our application. You can use child process to run system commands, read large files without blocking event loop,  decompose the application into various “nodes” (That’s why it’s called Node).
+
+## Can we send/receive messages between child processes
+
+Yes, we can.
+
+We can use send() function to send message to workers and receive the response on process.on(‘message’) event.
+
+Explain file system module of Node
+
+Node fs module provides simple file system module to perform files related operation. This module comprises of synchronous and asynchronous functions to read/write files. For example, readFile() function is asynchronous function to read file content from specified path and readFileSync() is synchronous function to read files.
+
+## How to scale Node application
+
+We can scale Node application in following ways:
+
+cloning using cluster module.
+Decomposing the application into smaller services – i.e micro services.
+List down your favorite and most useful NPM library
+
+You should list down your favorite node module along with reasons.
+
+## How to deploy Node application
+
+You should know how to deploy Node application on various cloud providers. If you know the basics, such as SSH access, git cloning and running the application in process manager then more or less the steps are same in various cloud providers.
+
+Reference: Hosting Node.js app to DigitalOcean Server
+
+We will keep adding questions as found or suggested by readers.
+
+You should also learn or revise few core JavaScript basics such as:
+
+Closures
+Prototype chaining.
+Data structure in JavaScript such as stack, queue, linked list etc
+How to create classes and perform inheritance.
+Explain scoping in JavaScript.
+
+## What are the main components of Node.js? Explain all in details.
+
+http://www.webdevelopmenthelp.net/2017/01/node-js-interview-questions.html
