@@ -160,4 +160,154 @@ function isShuffle(str1, str2, shuffle) {
 }
 
 ```
+## Stack & Queue
+```
+var Stack = function(){
+  this.top = null;
+  this.size = 0;
+};
 
+var Node = function(data){
+  this.data = data;
+  this.previous = null;
+};
+
+Stack.prototype.push = function(data) {
+  var node = new Node(data);
+
+  node.previous = this.top;
+  this.top = node;
+  this.size += 1;
+  return this.top;
+};
+
+Stack.prototype.pop = function() {
+  temp = this.top;
+  this.top = this.top.previous;
+  this.size -= 1;
+  return temp;
+};
+```
+```
+var Queue = function() {
+  this.first = null;
+  this.size = 0;
+};
+
+var Node = function(data) {
+  this.data = data;
+  this.next = null;
+};
+
+Queue.prototype.enqueue = function(data) {
+  var node = new Node(data);
+
+  if (!this.first){
+    this.first = node;
+  } else {
+    n = this.first;
+    while (n.next) {
+      n = n.next;
+    }
+    n.next = node;
+  }
+
+  this.size += 1;
+  return node;
+};
+
+Queue.prototype.dequeue = function() {
+  temp = this.first;
+  this.first = this.first.next;
+  this.size -= 1;
+  return temp;
+};
+```
+
+# prime
+```
+function(n) {
+    if(n === 1) { return false;}
+    else if(n == 2) { return true;}
+    else if(n == 3) { return true;}
+    else { 
+        for(i=Math.floor(Math.sqrt(n));i>=2;i--){
+            //console.log(i);//maybe another var in here? 
+                if(n%i ==0 || n%2 ==0 || n%3 == 0) {return false;} 
+        } 
+        }
+    return true;
+};
+```
+
+# odd-occuring-element
+```
+module.exports = function (array) {
+  return array.reduce(function (memo, number) {
+    return memo ^ number;
+  }, 0);
+};
+```
+# Array from value
+```
+Array.from(Array(10).keys())
+[...Array(10).keys()]
+```
+
+# missing-number
+```
+module.exports = function (array) {
+  return ((array.length + 1) * (2 + array.length) / 2) - array.reduce(function (memo, number) {
+    return memo + number;
+  }, 0);
+};
+```
+
+## matching node
+```
+/* global isMatchingNode */
+
+// Make the function accept the node from the first tree and the second tree
+// where we need to find the matching node
+module.exports = function (node, tree) {
+  // Easiest way to optimize this is to store the path from the node to the root
+  // and then we can traverse back down the second tree following the same path
+  var path  = [node],
+  // Use the child variable to find the matching node in the second tree
+      child = tree;
+
+  // Loop through all the parent nodes, pushing it into the stack as the pathway
+  while (node = node.parentNode) {
+    path.push(node);
+  }
+
+  // Pop the last thing we pushed onto the path since it'll be the root node
+  // E.g. It'll be the tree that we are passing in anyway
+  path.pop();
+
+  // Once the loop is done, we have the root node and can go back down the tree
+  while (node = path.pop()) {
+    for (var i = 0; i < child.childNodes.length; i++) {
+      // Here we assume we have a function called `isMatchingNode` that returns
+      // us a boolean in the case of two nodes matching each other
+      if (isMatchingNode(node, child.childNodes[i])) {
+        child = child.childNodes[i];
+        break; // Break looping over more nodes
+      }
+    }
+  }
+
+  return child;
+};
+```
+
+# big word
+```
+
+down vote
+You can custom sort based on string length, and grab the first item:
+
+longWords.sort(function(a, b) { 
+    return b.length - a.length; 
+});
+```
