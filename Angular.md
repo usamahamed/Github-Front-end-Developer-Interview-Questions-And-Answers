@@ -973,3 +973,55 @@ Also keeping some sensitive session data on the server should be the right way t
 The video link provided by Santanu Dey in his answer is helpful. Watch it if you haven't.
 
 Just a side note: It seems all the answers already given seem to disregard the fact that some operations could cause a heavy load on the server. That's relevant in terms of power consumption, hardware consumption, and cost (for servers rented by CPU cycle). A good developer shouldn't be lazy in optimizing their application, even if the operation can be done very quickly on a modern CPU on some rented server for which they don't pay its electricity and maintenance bill.
+
+# what is factory Component
+https://www.techifide.com/angulars-component-factory/
+# lazy loading
+Another advantage of using modules to group related pieces of functionality of our application is the ability to load those pieces on demand. Lazy loading modules helps us decrease the startup time. With lazy loading our application does not need to load everything at once, it only needs to load what the user expects to see when the app first loads. Modules that are lazily loaded will only be loaded when the user navigates to their routes.
+https://angular-2-training-book.rangle.io/handout/modules/lazy-loading-module.html
+
+# AOT
+Just-in-Time (JIT), which compiles your app in the browser at runtime
+Ahead-of-Time (AOT), which compiles your app at build time.
+https://angular.io/guide/aot-compiler
+
+# What are some of the Angular Style Guide suggestions you follow on your code? Why?
+https://angular.io/guide/styleguide
+
+# angular animation
+```
+animations: [
+  trigger('heroState', [
+    state('inactive', style({
+      backgroundColor: '#eee',
+      transform: 'scale(1)'
+    })),
+    state('active',   style({
+      backgroundColor: '#cfd8dc',
+      transform: 'scale(1.1)'
+    })),
+    transition('inactive => active', animate('100ms ease-in')),
+    transition('active => inactive', animate('100ms ease-out'))
+  ])
+]
+```
+https://angular.io/guide/animations
+
+# What would be a good use for NgZone service?
+Angular 2 runs inside of its own special zone called NgZone and this special zone extends the basic functionality of a zone to facilitate change detection.
+
+It is Running inside a zone allows to detect when asynchronous tasks.
+
+If you change or update your internal application code or view and it is detecting the applications changes with help of NgZone.
+https://blog.thoughtram.io/angular/2017/02/21/using-zones-in-angular-for-better-performance.html
+https://blog.thoughtram.io/angular/2016/01/22/understanding-zones.html
+
+# How will you http interceptor
+https://ryanchenkie.com/angular-authentication-using-the-http-client-and-http-interceptors
+# How you parallelize multiple observable call?
+https://coryrylan.com/blog/angular-multiple-http-requests-with-rxjs
+
+# What are some ways you may improve your website's scrolling performance?
+
+# How would you animate routing?
+http://jasonwatmore.com/post/2017/04/19/angular-2-4-router-animation-tutorial-example
