@@ -1191,42 +1191,34 @@ Generally arrow function can't instintiatied with new
 =====================================================================================
 # debounce
 ```
-// Create JD Object
-// ----------------
-var JD = {};
-
-// Debounce Method
-// ---------------
-JD.debounce = function(func, wait, immediate) {
-    var timeout;
-    return function() {
-        var context = this,
-            args = arguments;
-        var later = function() {
-            timeout = null;
-            if ( !immediate ) {
-                func.apply(context, args);
-            }
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait || 200);
-        if ( callNow ) { 
-            func.apply(context, args);
-        }
-    };
-};
+function debounce(callback, wait, context = this) {
+  let timeout = null 
+  let callbackArgs = null
+  
+  const later = () => callback.apply(context, callbackArgs)
+  
+  return function() {
+    callbackArgs = arguments
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
 ```
 #throttle
 ```
-function throttle(func, delay) {
-  let timeout = null
-  return function(...args) {
+function throttle(callback, wait, context = this) {
+  let timeout = null 
+  let callbackArgs = null
+  
+  const later = () => {
+    callback.apply(context, callbackArgs)
+    timeout = null
+  }
+  
+  return function() {
     if (!timeout) {
-      timeout = setTimeout(() => {
-        func.call(this, ...args)
-        timeout = null
-      }, delay)
+      callbackArgs = arguments
+      timeout = setTimeout(later, wait)
     }
   }
 }
