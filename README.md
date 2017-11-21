@@ -1191,36 +1191,32 @@ Generally arrow function can't instintiatied with new
 =====================================================================================
 # debounce
 ```
-function debounce(callback, wait, context = this) {
-  let timeout = null 
-  let callbackArgs = null
-  
-  const later = () => callback.apply(context, callbackArgs)
-  
-  return function() {
-    callbackArgs = arguments
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-  }
+function debounce(callback, delay) {
+let timeout=null
+return function(){
+if(timeout){
+clearTimeout(timeout)
+}
+let args=arguments;
+timeout=setTimeout(function(){
+timeout=null;
+callback.apply(null,args)
+},delay)
+}
+
 }
 ```
 #throttle
 ```
-function throttle(callback, wait, context = this) {
-  let timeout = null 
-  let callbackArgs = null
-  
-  const later = () => {
-    callback.apply(context, callbackArgs)
-    timeout = null
-  }
-  
-  return function() {
-    if (!timeout) {
-      callbackArgs = arguments
-      timeout = setTimeout(later, wait)
-    }
-  }
+function throttle(callback, delay) {
+var pervioucall=new Date().getTime();
+return function(){
+var time = new Date().getTime();
+if(time.pervioucall>=delay){
+pervioucall=time;
+callback.apply(this,arguments)
+}
+}
 }
 ```
 #curry
