@@ -1,4 +1,32 @@
- # merge sort
+# Create code for next conditions
+```
+var sum = function() { /* put your code here */};
+var s = sum();
+alert(s); // 0
+alert(s(1)); // 1
+alert(s(1)(2)); //3
+alert(s(3)(4)(5)); // 12
+```
+
+```
+var sum = function(n = 0) {
+    var sumTotal = function(n2 = 0) {
+        return sum(n2 + sumTotal);
+    };
+    sumTotal.toString = sumTotal.valueOf = function() { return n; };
+    return sumTotal;
+};
+var s = sum(); 
+alert(s); // 0 
+alert(s(1)); // 1 
+alert(s(1)(2)); //3 
+alert(s(3)(4)(5)); // 12
+```
+
+
+
+
+# merge sort
  ```
  function mergeSort(arr)
 {
