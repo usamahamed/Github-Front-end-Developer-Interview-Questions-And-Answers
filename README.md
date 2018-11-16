@@ -51,6 +51,18 @@ var result = spiralTraversal(input);
 console.log('result', result);
 ```
 =====================================================================================
+```
+function pyramid(n) {
+ 
+  for(let i=1; i<= n; i++){
+    let str = ' '.repeat(n-i);
+    let str2 = '#'. repeat(i*2 -1)
+ 
+    console.log(str + str2 + str);
+  }
+}
+```
+
 
 # Max product of 3 number
 ```
